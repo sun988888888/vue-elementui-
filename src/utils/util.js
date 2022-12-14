@@ -1,5 +1,7 @@
 import FileSaver from 'file-saver'
 import * as XLSX from 'xlsx'
+import html2canvas from "html2canvas";
+
 /**
  * 导出表格
  * @param {*} _this 对应组件的this
@@ -45,18 +47,36 @@ export function exportExcelFn(_this, api, data) {
  * @param {*} label 获取对应el-table元素 例子document.querySelector("#tableList")
  * @param {*} name  下载文档的名字
  */
-export function uploadTaber(label,name){
-  let wb = XLSX.utils.table_to_book(label,{raw:true})
-  let wbout=XLSX.write(wb,{
-    bookType:'xlsx',
-    bookSST:true,
-    type:'array'
+export function uploadTaber(label, name) {
+  let wb = XLSX.utils.table_to_book(label, { raw: true })
+  let wbout = XLSX.write(wb, {
+    bookType: 'xlsx',
+    bookSST: true,
+    type: 'array'
   })
   try {
     FileSaver.saveAs(
-      new Blob([wbout],{type:'application/octet-stream'}),name
+      new Blob([wbout], { type: 'application/octet-stream' }), name
     )
   } catch (error) {
     console.error(error)
   }
+}
+/**
+ * 导出elementui的表格
+ * @param {*} label 获取对应模板的id 例子document.querySelector("#tableList")
+ */
+export function addCanvas(label) {
+  html2canvas(label, {
+    backgroundColor: "transparent",
+    allowTaint: true,
+    useCORS: true,
+  }).then((canvas) => {
+    // canvas为转换后的Canvas对象
+    let oImg = new Image();
+    oImg.src = canvas.toDataURL(); // 导出图片
+    console.log(canvas.toDataURL());
+    return canvas.toDataURL()
+    //document.body.appendChild(oImg); // 将生成的图片添加到body
+  });
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <el-card>frontend 2022 Casey</el-card>
+    <el-card align=center>欢迎来到十七点五</el-card>
   </div>
 </template>
 

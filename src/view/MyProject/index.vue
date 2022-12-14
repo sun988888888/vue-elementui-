@@ -19,11 +19,11 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-button type="primary" icon="el-icon-refresh" @click="uploadTabe"
           >导出</el-button
         >
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <!-- 表格数据 -->
     <el-table :data="tableData" border style="width: 100%" id="tableList">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { uploadTaber } from "@/utils/util";
+//import { uploadTaber } from "@/utils/util";
 import AddProject from "./addProject.vue";
 export default {
   name: "ProjectOneIndex",
@@ -80,13 +80,13 @@ export default {
       ],
     };
   },
-
-  mounted() {},
+  mounted() {
+  },
 
   methods: {
-    uploadTabe() {
-      uploadTaber(document.querySelector("#tableList"),'测试.xlsx')
-    },
+    /* uploadTabe() {
+      uploadTaber(document.querySelector("#tableList"), "测试.xlsx");
+    }, */
     /* 打开弹窗 */
     orderDetail(type) {
       this.orderType = type;

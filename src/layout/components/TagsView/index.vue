@@ -48,13 +48,11 @@ export default {
   },
   methods: {
     isActive(route) {
-      console.log(route,2222);
       return route.path == this.$route.path
     },
     addTags() {
       const { name } = this.$route
       if (name) {
-        console.log(1111);
         this.$store.dispatch('tagsView/addView', this.$route)
       }
       return false

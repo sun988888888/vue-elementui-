@@ -1,6 +1,6 @@
 <template>
   <div class="menu">
-    <el-aside width="200px">
+    <el-aside width="160px">
       <el-menu
         router
         :default-active="activeMenu"
