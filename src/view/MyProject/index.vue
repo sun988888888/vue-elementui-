@@ -3,20 +3,30 @@
     <!-- 搜索栏 -->
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="项目名称">
-        <el-input v-model="formInline.orderName" placeholder="请输入"></el-input>
+        <el-input
+          v-model="formInline.orderName"
+          placeholder="请输入"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search">搜索</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-plus" @click="orderDetail(1)">创建项目</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="orderDetail(1)"
+          >创建项目</el-button
+        >
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-refresh" @click="uploadTabe"
+          >导出</el-button
+        >
+      </el-form-item>
     </el-form>
     <!-- 表格数据 -->
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" border style="width: 100%" id="tableList">
       <el-table-column prop="ID" align="center" label="ID" width="180">
       </el-table-column>
       <el-table-column prop="name" align="center" label="项目名称" width="180">
@@ -31,9 +41,13 @@
       </el-table-column>
       <el-table-column prop="img3" align="center" label="互动图">
       </el-table-column>
-      <el-table-column label="操作" align='center'>
-        <el-button type="primary" size="mini" @click="orderDetail(2)">编辑</el-button>
-        <el-button type="primary" size="mini" @click="goExpertDeatil">查看</el-button>
+      <el-table-column label="操作" align="center">
+        <el-button type="primary" size="mini" @click="orderDetail(2)"
+          >编辑</el-button
+        >
+        <el-button type="primary" size="mini" @click="goExpertDeatil"
+          >查看</el-button
+        >
       </el-table-column>
     </el-table>
     <add-project :visiable.sync="dialogVisiable" :type.sync="orderType" />
@@ -41,14 +55,15 @@
 </template>
 
 <script>
-import AddProject from './addProject.vue'
+import { uploadTaber } from "@/utils/util";
+import AddProject from "./addProject.vue";
 export default {
   name: "ProjectOneIndex",
-  components:{AddProject},
+  components: { AddProject },
   data() {
     return {
-      dialogVisiable:false,//弹窗
-      orderType:1,
+      dialogVisiable: false, //弹窗
+      orderType: 1,
       formInline: {
         orderName: "",
       },
@@ -69,15 +84,21 @@ export default {
   mounted() {},
 
   methods: {
+    uploadTabe() {
+      uploadTaber(document.querySelector("#tableList"),'测试.xlsx')
+    },
     /* 打开弹窗 */
-    orderDetail(type){
-      this.orderType=type
-      this.dialogVisiable=true
+    orderDetail(type) {
+      this.orderType = type;
+      this.dialogVisiable = true;
     },
     /* 跳转详情页 */
-    goExpertDeatil(){
-      this.$router.push({path:'/layout/expertDetail',query: {id:'123456'}})
-    }
+    goExpertDeatil() {
+      this.$router.push({
+        path: "/layout/expertDetail",
+        query: { id: "123456" },
+      });
+    },
   },
 };
 </script>

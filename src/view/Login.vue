@@ -1,26 +1,23 @@
 <template>
  <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
       <div class="title-container">
         <h3 class="title">Login Form</h3>
       </div>
-
-      <el-form-item prop="username">
+      <el-form-item prop="phone">
         <span class="svg-container">
           <i class="fa fa-user-circle-o" />
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
+          v-model="loginForm.phone"
+          placeholder="Phone"
           name="username"
           type="text"
           tabindex="1"
           autocomplete="on"
         />
       </el-form-item>
-
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
@@ -43,32 +40,33 @@
 </template>
 
 <script>
-import { setToken } from "@/utils/setToken.js";
+import { setStorage } from "@/utils/setStorage.js";
 import { login } from "@/api.js";
 export default {
   name: "OperaLogin",
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('Please enter the correct user name'))
+      let reg=/^(?:(?:\+|00)86)?1[3-9]\d{9}$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入手机号'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('请输入大于6位数的密码'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: '',
+        phone: '',
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        phone: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
@@ -86,31 +84,17 @@ export default {
     handleLogin(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          /* 
-          this.service.post("/login", this.form).then((res) => {
-            let { status } = res;
-            if (status == 200) {
-              setToken("token", res.token);
-              setToken("username", res.username);
-              this.$message({ message: res.message, type: "success" });
-              this.$router.replace("/home");
-            } else {
-              this.$message.error(res.message);
-            }
-          }); 
-          */
-         /* this.$router.replace("/layout"); */
          /* 存储token */
-         this.$store.dispatch('user/resetToken','11111')
+         /* this.$store.dispatch('user/resetToken','11111') */
           login(this.loginForm).then((res) => {
-            let { status } = res;
-            if (status == 200) {
-              setToken("token", res.token);
-              setToken("username", res.username);
-              this.$message({ message: res.message, type: "success" });
-              /* this.$router.replace("/home"); */
+            let { code,data:{token,nickname} } = res;
+            if (code == 200) {
+              setStorage("token",token);
+              setStorage("username",nickname);
+              this.$message({ message: res.msg, type: "success" });
+              this.$router.replace("/layout");
             } else {
-              this.$message.error(res.message);
+              this.$message.error(res.msg);
             }
           });
         } else {

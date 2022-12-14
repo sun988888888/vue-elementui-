@@ -33,7 +33,6 @@ export default {
     getDataTags(arr) {
       arr.forEach((item) => {
         if (JSON.parse(sessionStorage.getItem("state")).includes(item.name)) {
-          console.log(item.name);
           this.$store.dispatch("tagsView/addView", item);
         }
         if (item.children && item.children.length > 0) {

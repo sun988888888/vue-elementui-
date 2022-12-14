@@ -20,15 +20,9 @@ export default new Router({
       path: '/layout',
       name: 'layout',
       iconClass: 'fa fa-users',
-      redirect: '/layout/student',
+      redirect: '/layout/myProject',
       component: () => import('@/layout'),
       children: [
-        {
-          path: '/layout/student',
-          name: '学生列表',
-          iconClass: 'fa fa-list-alt',
-          component: () => import('@/components/students/studentList.vue'),
-        },
         {
           path: '/layout/myProject',
           name: '我的项目',

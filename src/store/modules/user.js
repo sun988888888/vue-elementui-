@@ -1,7 +1,7 @@
-import { getToken } from '@/utils/setToken'
+import { getStorage } from '@/utils/setStorage'
 
 const state = {
-  token: getToken(),
+  token: getStorage('token'),
   name: '',
   avatar: '',
   introduction: '',

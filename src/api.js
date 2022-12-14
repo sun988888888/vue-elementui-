@@ -3,7 +3,6 @@ import service from '@/utils/serves'
 
 /* 登录请求 */
 export function login(data) {
-  console.log(data,11111);
   return service({
     method: 'post',
     url: '/user@login',

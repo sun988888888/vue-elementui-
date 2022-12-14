@@ -1,3 +1,5 @@
+import FileSaver from 'file-saver'
+import * as XLSX from 'xlsx'
 /**
  * 导出表格
  * @param {*} _this 对应组件的this
@@ -36,4 +38,25 @@ export function exportExcelFn(_this, api, data) {
     .catch(error => {
       _this.$message.error(error);
     });
+}
+
+/**
+ * 导出elementui的表格
+ * @param {*} label 获取对应el-table元素 例子document.querySelector("#tableList")
+ * @param {*} name  下载文档的名字
+ */
+export function uploadTaber(label,name){
+  let wb = XLSX.utils.table_to_book(label,{raw:true})
+  let wbout=XLSX.write(wb,{
+    bookType:'xlsx',
+    bookSST:true,
+    type:'array'
+  })
+  try {
+    FileSaver.saveAs(
+      new Blob([wbout],{type:'application/octet-stream'}),name
+    )
+  } catch (error) {
+    console.error(error)
+  }
 }

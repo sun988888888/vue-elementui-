@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {getToken} from '@/utils/setToken.js'
+import {getStorage} from '@/utils/setStorage.js'
 export default {
   name: 'OperaHeader',
 
@@ -18,7 +18,7 @@ export default {
     };
   },
   created() {
-    this.name=getToken('username')
+    this.name=getStorage('username')
   },
   mounted() {
     
