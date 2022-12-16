@@ -3,18 +3,24 @@
     <el-dialog :title="title" :visible.sync="dialogVisible" width="30%">
       <div>
         <el-form label-width="130px" :model="formLabelAlign">
-          <el-form-item label="项目名称">
+          <el-form-item label="项目名称" v-if="orderType == 1">
             <el-input v-model="formLabelAlign.name"></el-input>
           </el-form-item>
           <el-form-item label="导入合作达人名单">
             <el-upload
               class="upload-demo"
               ref="upload"
-              action="https://testwww.superhub.com.cn/testOperateApi/api/file@upload"
+              action="/admin/api/project@create"
+              :auto-upload="false"
+              :file-list="fileList"
+              :name="filename"
+              :data="projectData"
+              :headers="headerObj"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
-              :file-list="fileList"
-              :data="{ api: 'file@upload' }"
+              :on-success="addSuc"
+              :on-error="failUpload"
+              :before-upload="beforeUpload"
             >
               <el-button slot="trigger" size="small" type="primary"
                 >选取文件</el-button
@@ -42,6 +48,8 @@
 </template>
 
 <script>
+import { getStorage } from "@/utils/setStorage";
+//import { editProject } from "@/api";
 export default {
   name: "ProjectOneAddproject",
   props: {
@@ -50,6 +58,10 @@ export default {
       default: false,
     },
     type: {
+      type: Number,
+      default: 1,
+    },
+    orderId: {
       type: Number,
       default: 1,
     },
@@ -74,44 +86,79 @@ export default {
   },
   data() {
     return {
+      projectAction: "/admin/api/project@create",
+      projectData: {},
+      filename: "filename",
+      headerObj: {
+        token: getStorage("token"),
+      },
+      istoken: "",
       title: "创建项目",
       formLabelAlign: {
-        name: ""
+        name: "",
       },
-      fileList: [
-        {
-          name: "food.jpeg",
-          url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-        {
-          name: "food2.jpeg",
-          url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-      ],
+      fileList: [],
     };
   },
   watch: {
-    orderType: function (newVal) {
-      this.orderType==1?this.title='创建项目':this.title='编辑项目'
-      newVal==2 && this.getData(); //newVal==2存在的话执行drawChar函数
+    orderType: {
+      handler: function (newVal) {
+        if (newVal == 1) {
+          this.projectAction = "/admin/api/project@create";
+        } else if (newVal == 2) {
+          this.projectAction = "/admin/api/project@append";
+        }
+        this.orderType == 1
+          ? (this.title = "创建项目")
+          : (this.title = "编辑项目");
+        //newVal == 2 && editProject({ id: this.orderId }); //newVal==2存在的话执行drawChar函数
+      },
+      immediate: true,
     },
+    dialogVisible:{
+      handler:function (newVal) {
+        if(newVal==false){
+          this.closeDialog()
+        }
+      },
+      immediate: true,
+    }
   },
   methods: {
-    /* 编辑获取数据 */
-    getData(){
-      console.log(this.orderType);
+    failUpload() {
+      this.$message.error("上传失败");
+    },
+    addSuc() {
+      this.$message.success("上传成功");
+      this.closeDialog();
+    },
+    /* 关闭弹窗 */
+    closeDialog() {
+      this.formLabelAlign.name = "";
+      this.fileList = [];
+      this.$emit("update:visiable", false);
+    },
+    beforeUpload() {
+      if (this.orderType == 1) {
+          this.projectData.api = "project@create",
+          this.projectData.title = this.formLabelAlign.name,
+          this.projectData.data = JSON.stringify({ title: this.formLabelAlign.name })
+      } else if (this.orderType == 2) {
+          this.projectData.api = "project@append",
+          this.projectData.data = JSON.stringify({ p_id: this.orderId })
+      }
     },
     /* 提交数据 */
     submitData() {
-      let res = [];
-      console.log(this.$refs.upload);
-      this.$refs.upload.uploadFiles.forEach((item) => {
-        if (item.response && item.response.code === 200) {
-          res.push(item.response.data.img);
-        }
-      });
-      console.log(res, 1111);
-      return res;
+      if ((this.formLabelAlign.name == "" || this.fileList == []) && this.orderType==1) {
+        this.$message.warning("请填写完整");
+        return;
+      }else if(this.fileList == []){
+        this.$message.warning("请填写完整");
+        return;
+      }
+
+      this.$refs.upload.submit();
     },
     /* 下载文档 */
     downloadTemplate() {

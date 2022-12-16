@@ -1,7 +1,9 @@
 <template>
   <div class="header">
     <el-header>
-      <div class="title">十七点五</div>
+      <div class="title">
+        <img style="height: 100%" src="@/assets/LOGO二.png" alt="" />十七点五
+      </div>
       <div v-popover:popover>{{ name }}</div>
     </el-header>
     <el-popover ref="popover" placement="bottom" trigger="click">
@@ -44,8 +46,11 @@ export default {
     display: flex;
     justify-content: space-between;
     .title {
+      display: flex;
       width: 200px;
-      font-size: 24px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #b49ffe;
     }
   }
 }

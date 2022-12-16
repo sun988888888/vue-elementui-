@@ -10,6 +10,9 @@ import router from './router'
 Vue.prototype.axios=axios */
 import service from './utils/serves'
 Vue.prototype.service=service
+/* 全局安装复制剪贴板 */
+import VueClipboard from "vue-clipboard2";
+Vue.use(VueClipboard);
 
 import store from './store'
 

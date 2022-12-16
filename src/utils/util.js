@@ -1,7 +1,8 @@
 import FileSaver from 'file-saver'
 import * as XLSX from 'xlsx'
 import html2canvas from "html2canvas";
-
+import JSZip from 'jszip'
+import table2excel from 'js-table2excel'
 /**
  * 导出表格
  * @param {*} _this 对应组件的this
@@ -79,4 +80,98 @@ export function addCanvas(label) {
     return canvas.toDataURL()
     //document.body.appendChild(oImg); // 将生成的图片添加到body
   });
+}
+
+
+/* 前端生成打包文件 */
+/* 生成压缩文件 */
+export function filesToRar(arrImages, filename,_this) {
+  let zip = new JSZip();
+  let cache = {};
+  let promises = [];
+  /* let times = 1;
+  var setIme = setInterval(() => {
+    times++;
+    console.log(times);
+  }, 1000);
+ */
+  for (let item of arrImages) {
+    const promise = getImgArrayBuffer(item.fileUrl).then(data => {
+      // 下载文件, 并存成ArrayBuffer对象(blob)
+      zip.file(item.renameFileName, data, { binary: true }); // 逐个添加文件
+      cache[item.renameFileName] = data;
+    });
+    promises.push(promise);
+  }
+  Promise.all(promises)
+    .then(() => {
+      zip.generateAsync({ type: "blob" }).then(content => {
+        // 生成二进制流
+        FileSaver.saveAs(content, filename); // 利用file-saver保存文件  自定义文件名
+        _this.$notify.close();
+        _this.$notify({
+          message: "压缩完成"
+        });
+        /* window.clearInterval(setIme); */
+      });
+    })
+    .catch(() => {
+      _this.$notify({
+        message: "文件压缩失败"
+      });
+    });
+}
+//获取文件blob
+function getImgArrayBuffer(url) {
+  return new Promise((resolve, reject) => {
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", url, true);
+    xmlhttp.responseType = "blob";
+    xmlhttp.onload = function () {
+      if (this.status == 200) {
+        resolve(this.response);
+      } else {
+        reject(this.status);
+      }
+    };
+    xmlhttp.send();
+  });
+}
+
+/* 前端打印elementui表格 */
+/**
+ * 导出elementui的表格
+ * @param {*} column 对应的表头
+ * @param {*} tableData 传入对应的数据
+ */
+export function uploadElExcel(column,tableData){
+ /*例子 
+  const column = [{
+    title: '手机号', //表格名称
+    key: 'shouji',  //对应的key
+    type: 'text'  //类型
+  },
+    {
+      title: '照片',
+      key: 'fileUrl',
+      type: 'image',
+      width: 200,
+      height: 200
+    },{
+      title: '照片2',
+      key: 'fileUrl2',
+      type: 'image',
+      width: 200,
+      height: 200
+    },{
+      title: '照片3',
+      key: 'fileUrl3',
+      type: 'image',
+      width: 200,
+      height: 200
+    },
+  ] */
+  let tableDatas = JSON.parse(JSON.stringify(tableData))
+  let datas = tableDatas;
+  table2excel(column, datas, '数据.xls')
 }

@@ -9,96 +9,311 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="getData(1)"
+          >搜索</el-button
+        >
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-plus"  @click="addOrder(1)">添加达人</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addOrder(1)"
+          >添加达人</el-button
+        >
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-share">创建分享</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-download">导出</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="uploadExcel"
+          >导出</el-button
+        >
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="getData"
+          >刷新</el-button
+        >
       </el-form-item>
     </el-form>
     <!-- 达人信息数据 -->
     <el-table
       border
       ref="multipleTable"
+      id="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-loading="isLoading"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column label="ID" align="center" width="120">
-        <template slot-scope="scope">{{ scope.row.ID }}</template>
+        <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column prop="name" align="center" label="项目名称" width="120">
+      <el-table-column
+        prop="nickname"
+        align="center"
+        label="达人昵称"
+        width="120"
+      >
       </el-table-column>
-      <el-table-column prop="phone" align="center" label="任务名称">
+      <el-table-column align="center" label="发布链接">
+        <template slot-scope="scope">
+          <a :href="scope.row.link">{{ scope.row.link }}</a>
+        </template>
       </el-table-column>
-      <el-table-column prop="linkNum" align="center" label="达人数">
+      <el-table-column align="center" label="收录图">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.included_img"
+            :preview-src-list="[scope.row.included_img]"
+          >
+          </el-image>
+        </template>
       </el-table-column>
-      <el-table-column prop="linkNum" align="center" label="发布链接">
+      <el-table-column align="center" label="小眼睛图">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.eyes_img"
+            :preview-src-list="[scope.row.eyes_img]"
+          >
+          </el-image>
+        </template>
       </el-table-column>
-      <el-table-column prop="linkNum" align="center" label="收录图">
+      <el-table-column prop="eyes_num" align="center" label="小眼睛数">
       </el-table-column>
-      <el-table-column prop="linkNum" align="center" label="小眼睛图">
+      <el-table-column align="center" label="互动图">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.interactive_img"
+            :preview-src-list="[scope.row.interactive_img]"
+          >
+          </el-image>
+        </template>
       </el-table-column>
-      <el-table-column prop="linkNum" align="center" label="互动图">
+      <el-table-column prop="liked_count" align="center" label="点赞数">
+      </el-table-column>
+      <el-table-column prop="collected_count" align="center" label="收藏数">
+      </el-table-column>
+      <el-table-column prop="comments_count" align="center" label="评论数">
       </el-table-column>
       <el-table-column label="操作" align="center" min-width="50px">
-        <el-button type="primary" size="mini"  @click="addOrder(2)">编辑</el-button>
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="addOrder(2, scope.row.id)"
+            >编辑</el-button
+          >
+        </template>
       </el-table-column>
     </el-table>
-    <add-expert :visiable.sync="dialogVisiable" :type.sync="orderType"/>
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="currentPage"
+      :limit.sync="pageSize"
+      @pagination="getData"
+    />
+    <add-expert
+      :visiable.sync="dialogVisiable"
+      :type.sync="orderType"
+      :editId.sync="editId"
+    />
   </div>
 </template>
 
 <script>
-import AddExpert from './addExpert.vue'
+import Pagination from "@/components/pagination";
+import { orderUserList } from "@/api";
+import AddExpert from "./addExpert.vue";
+import { filesToRar, uploadElExcel } from "@/utils/util";
+/* import table2excel from 'js-table2excel' */
+/* import JSZip from 'jszip'
+import FileSaver from "file-saver" */
 export default {
   name: "ProjectOneIndex",
-  components:{
-    AddExpert
+  components: {
+    AddExpert,
+    Pagination,
   },
   data() {
     return {
+      editId: 1, //列表编辑ID
       dialogVisiable: false, //弹窗
+      isLoading: false,
+      currentPage: 1, //当前页数
+      pageSize: 10, //每页显示条数
+      total: 10, //总条数
       orderType: 1,
       formInline: {
         projectName: "",
         orderName: "",
       },
-      tableData: [
-        {
-          ID: "1",
-          name: "XXXXXXXXX",
-          link: "55",
-          phone: "18736110883",
-          linkNum: "55",
-          img1: "https://staticonline.superhub.com.cn/20221206/2999760c02c86548c5e8a8c8d425ccd3.jpg",
-          img2: "https://staticonline.superhub.com.cn/20221121/925006c486f423452d067915035937ad.jpg",
-          img2NUm: "55",
-          img3: "https://staticonline.superhub.com.cn/20221121/925006c486f423452d067915035937ad.jpg",
-          num1: 55,
-          num2: 55,
-          num3: 55,
-        },
-      ],
+      tableData: [],
       /* 选中的数据 */
       multipleSelection: [],
     };
   },
 
-  mounted() {},
+  mounted() {
+    this.getData();
+  },
 
   methods: {
-    addOrder(type) {
+    uploadExcel() {
+      let newArr = [];
+      this.multipleSelection.forEach((item) => {
+        newArr.push({
+          fileUrl: item.included_img,
+          renameFileName: item.nickname + "-included_img.png",
+        });
+        newArr.push({
+          fileUrl: item.eyes_img,
+          renameFileName: item.nickname + "-eyes_img.png",
+        });
+        newArr.push({
+          fileUrl: item.interactive_img,
+          renameFileName: item.nickname + "-interactive_img.png",
+        });
+      });
+      let commons = [
+        {
+          title: "ID", //表格名称
+          key: "id", //对应的key
+          type: "text", //类型
+        },
+        {
+          title: "达人昵称",
+          key: "nickname",
+          type: "text",
+        },
+        {
+          title: "发布链接",
+          key: "link",
+          type: "text",
+        },
+        {
+          title: "收录图",
+          key: "included_img",
+          type: "image",
+          width: 200,
+          height: 200,
+        },
+        {
+          title: "小眼睛图",
+          key: "eyes_img",
+          type: "image",
+          width: 200,
+          height: 200,
+        },
+        {
+          title: "小眼睛数",
+          key: "eyes_num",
+          type: "text",
+        },
+        {
+          title: "互动图",
+          key: "interactive_img",
+          type: "image",
+          width: 200,
+          height: 200,
+        },
+        {
+          title: "点赞数",
+          key: "liked_count",
+          type: "text",
+        },
+        {
+          title: "收藏数",
+          key: "collected_count",
+          type: "text",
+        },
+        {
+          title: "评论数",
+          key: "comments_count",
+          type: "text",
+        },
+      ];
+      console.log('newArr: ', newArr);
+      uploadElExcel(commons, this.multipleSelection);
+      filesToRar(newArr, "图片打包", this);
+    },
+
+    getData(type) {
+      this.isLoading = true;
+      let obj = {
+        task_id: this.$route.query.id,
+        pageSize: this.pageSize,
+        page: this.currentPage,
+      };
+      if (type == 1) {
+        obj.keyword = this.formInline.projectName;
+      }
+      orderUserList(obj)
+        .then((res) => {
+          if (res.code == 200) {
+            let { data, current_page, total } = res.data;
+            this.isLoading = false;
+            this.currentPage = current_page;
+            this.total = total;
+            data = [
+              {
+                id: 5,
+                nickname: "5936122286",
+                user_link: "微博",
+                phone: "18736110883",
+                included_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                eyes_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                eyes_num: 0,
+                interactive_img:'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                link: null,
+                liked_count: 0,
+                collected_count: 0,
+                comments_count: 0,
+              },
+              {
+                id: 5,
+                nickname: "593612228",
+                user_link: "微博",
+                phone: "18736110883",
+                included_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                eyes_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                eyes_num: 0,
+                interactive_img:'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                link: null,
+                liked_count: 0,
+                collected_count: 0,
+                comments_count: 0,
+              },
+              {
+                id: 5,
+                nickname: "59361222",
+                user_link: "微博",
+                phone: "18736110883",
+                included_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                eyes_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                eyes_num: 0,
+                interactive_img:'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                link: null,
+                liked_count: 0,
+                collected_count: 0,
+                comments_count: 0,
+              },
+            ];
+            this.tableData = data;
+            console.log(this.tableData);
+          } else {
+            this.isLoading = false;
+            console.error(res.msg);
+          }
+        })
+        .catch(() => {
+          this.isLoading = false;
+        });
+    },
+    addOrder(type, id) {
+      this.editId = id;
       this.orderType = type;
       this.dialogVisiable = true;
     },
@@ -106,8 +321,11 @@ export default {
       console.log(val);
       this.multipleSelection = val;
     },
-      goDataBackDeatil(){
-      this.$router.push({path:'/layout/DataBackDetail',query: {id:'123456'}})
+    goDataBackDeatil() {
+      this.$router.push({
+        path: "/layout/DataBackDetail",
+        query: { id: "123456" },
+      });
     },
   },
 };
