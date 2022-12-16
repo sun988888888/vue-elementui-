@@ -76,7 +76,8 @@
               goDataBackDeatil(
                 scope.row.id,
                 scope.row.task_type,
-                scope.row.p_id
+                scope.row.p_id,
+                scope.row.title
               )
             "
             >查看</el-button
@@ -188,10 +189,10 @@ export default {
       console.log(val);
       this.multipleSelection = val;
     },
-    goDataBackDeatil(id, typeId, p_id) {
+    goDataBackDeatil(id, typeId, p_id, orderName) {
       this.$router.push({
         path: "/layout/DataBackDetail",
-        query: { id, typeId, p_id },
+        query: { id, typeId, p_id, orderName },
       });
     },
   },

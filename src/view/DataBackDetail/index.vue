@@ -171,18 +171,22 @@ export default {
   methods: {
     uploadExcel() {
       let newArr = [];
+      if(this.multipleSelection.length==0){
+        this.$message.warning('请勾选要导出的列表')
+        return
+      }
       this.multipleSelection.forEach((item) => {
         newArr.push({
           fileUrl: item.included_img,
-          renameFileName: item.nickname + "-included_img.png",
+          renameFileName: this.$route.query.orderName + '-' + item.nickname + "-收录图.png",
         });
         newArr.push({
           fileUrl: item.eyes_img,
-          renameFileName: item.nickname + "-eyes_img.png",
+          renameFileName: this.$route.query.orderName + '-' + item.nickname + "-小眼睛图.png",
         });
         newArr.push({
           fileUrl: item.interactive_img,
-          renameFileName: item.nickname + "-interactive_img.png",
+          renameFileName: this.$route.query.orderName + '-' + item.nickname + "-互动图.png",
         });
       });
       let commons = [

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" :visible.sync="dialogVisible" width="30%">
+    <el-dialog :title="title" :visible.sync="dialogVisible" min-width="550px">
       <div>
         <el-form label-width="130px" :model="formLabelAlign">
           <el-form-item label="项目名称" v-if="orderType == 1">
