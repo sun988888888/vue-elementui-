@@ -154,7 +154,7 @@ export default {
         this.$message.warning("请填写完整");
         return;
       }else if(this.fileList == []){
-        this.$message.warning("请填写完整");
+        this.$message.warning("请上传表格");
         return;
       }
 

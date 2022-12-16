@@ -141,7 +141,15 @@ export default {
       multipleSelection: [],
     };
   },
-
+  watch: {
+    dialogVisiable: {
+      handler: function (newval) {
+        if(newval==false){
+          this.getData();
+        }
+      },
+    },
+  },
   mounted() {
     this.getData();
     this.getselectTypes()

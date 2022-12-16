@@ -29,6 +29,7 @@
             <el-col>
               <span>回收时间范围：</span>
               <el-date-picker
+                align="center"
                 v-model="dataForm.link_date"
                 type="datetimerange"
                 range-separator="至"
@@ -50,6 +51,7 @@
             <el-col>
               <span>回收时间范围：</span>
               <el-date-picker
+                align="center"
                 v-model="dataForm.included_date"
                 type="datetimerange"
                 range-separator="至"
@@ -71,6 +73,7 @@
             <el-col>
               <span>回收时间范围：</span>
               <el-date-picker
+                align="center"
                 v-model="dataForm.eyes_date"
                 type="datetimerange"
                 range-separator="至"
@@ -92,6 +95,7 @@
             <el-col>
               <span>回收时间范围：</span>
               <el-date-picker
+                align="center"
                 v-model="dataForm.interactive_date"
                 type="datetimerange"
                 range-separator="至"
@@ -178,7 +182,7 @@ export default {
         is_link: 1,
         link_date: "",
         is_included: 1,
-        included_date: ["2022-12-13 12:08:06", "2022-12-16"],
+        included_date: "",
         is_eyes: 1,
         eyes_date: "",
         is_interactive: 1,
@@ -223,15 +227,57 @@ export default {
       obj.interactive_date = this.dataForm.interactive_date[0];
       obj.interactive_date_e = this.dataForm.interactive_date[1];
       obj.id = this.editType;
+      if (!this.verifyData(obj)) return;
       editTask(obj).then((res) => {
         console.log(res);
         if (res.code == 200) {
           this.$message.success("提交成功");
           this.handleClose();
         } else {
-          this.$$message.error(res.msg);
+          this.$message.error(res.msg);
         }
       });
+    },
+    verifyData(obj) {
+      let {
+        title,
+        is_link,
+        link_date,
+        is_included,
+        included_date,
+        is_eyes,
+        eyes_date,
+        is_interactive,
+        interactive_date,
+        is_recovery,
+        recovery_day,
+      } = obj;
+      let str = "";
+      if (title == "") {
+        str = "请填写任务标题";
+      } else if (is_link == 1 && link_date == null) {
+        str = "请选择发布链接时间";
+      } else if (is_included == 1 && included_date == null) {
+        str = "请选择收录图回收时间";
+      } else if (is_eyes == 1 && eyes_date == null) {
+        str = "请选择小眼睛图回收时间";
+      } else if (is_interactive == 1 && interactive_date == null) {
+        str = "请选择互动图回收时间";
+      } else if (is_recovery == 1 && recovery_day == "") {
+        str = "请选择数据回收时间";
+      } else {
+        str = "";
+      }
+      console.log("link_date: ", link_date, is_link);
+
+      if (str != "") {
+        console.log(1111);
+        this.$message.error(str);
+        return false;
+      } else {
+        console.log(2222);
+        return true;
+      }
     },
     /* 获取详情 */
     getOrderUserInfo() {
@@ -265,11 +311,11 @@ export default {
     },
     handleClose() {
       this.$refs["ruleForm"].resetFields();
-      this.dataForm.included_date = []
+      this.dataForm.included_date = [];
       this.dataForm.link_date = [];
       this.dataForm.eyes_date = [];
       this.dataForm.interactive_date = [];
-      this.dataForm.recovery_day=''
+      this.dataForm.recovery_day = "";
       this.$emit("update:visiable", false);
     },
   },

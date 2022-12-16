@@ -155,7 +155,15 @@ export default {
       multipleSelection: [],
     };
   },
-
+  watch: {
+    dialogVisiable: {
+      handler: function (newval) {
+        if (newval == false) {
+          this.getData();
+        }
+      },
+    },
+  },
   mounted() {
     this.getData();
   },
@@ -235,7 +243,7 @@ export default {
           type: "text",
         },
       ];
-      console.log('newArr: ', newArr);
+      console.log("newArr: ", newArr);
       uploadElExcel(commons, this.multipleSelection);
       filesToRar(newArr, "图片打包", this);
     },
@@ -263,10 +271,13 @@ export default {
                 nickname: "5936122286",
                 user_link: "微博",
                 phone: "18736110883",
-                included_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
-                eyes_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                included_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
+                eyes_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
                 eyes_num: 0,
-                interactive_img:'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                interactive_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
                 link: null,
                 liked_count: 0,
                 collected_count: 0,
@@ -277,10 +288,13 @@ export default {
                 nickname: "593612228",
                 user_link: "微博",
                 phone: "18736110883",
-                included_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
-                eyes_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                included_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
+                eyes_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
                 eyes_num: 0,
-                interactive_img:'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                interactive_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
                 link: null,
                 liked_count: 0,
                 collected_count: 0,
@@ -291,10 +305,13 @@ export default {
                 nickname: "59361222",
                 user_link: "微博",
                 phone: "18736110883",
-                included_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
-                eyes_img: 'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                included_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
+                eyes_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
                 eyes_num: 0,
-                interactive_img:'https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png',
+                interactive_img:
+                  "https://staticonline.superhub.com.cn/20221205/71c01428a296b91d99b10035e10c1d53.png",
                 link: null,
                 liked_count: 0,
                 collected_count: 0,

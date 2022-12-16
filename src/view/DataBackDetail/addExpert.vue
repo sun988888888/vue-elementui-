@@ -19,7 +19,7 @@
               v-if="dialogVisible && expertList && expertList.length > 0"
             >
               <el-checkbox-group v-model="dataForm.ids">
-                  <el-checkbox
+                <el-checkbox
                   v-for="item in expertList"
                   :label="item.id"
                   :key="item.id"
@@ -145,7 +145,13 @@
 </template>
 
 <script>
-import { orderUserInfo, editUserOrder, addOrderUser,selectOrderUser,backOrderInfo } from "@/api";
+import {
+  orderUserInfo,
+  editUserOrder,
+  addOrderUser,
+  selectOrderUser,
+  backOrderInfo,
+} from "@/api";
 export default {
   name: "ProjectOneDataback",
   props: {
@@ -182,10 +188,10 @@ export default {
   },
   data() {
     return {
-      expertList:[],
+      expertList: [],
       title: "添加达人",
-      dataForm: {
-        ids: [],
+      "dataForm": {
+        "ids": [],
         title: "",
         task_type: "",
         desc: "",
@@ -216,9 +222,9 @@ export default {
           if (this.orderType == 2) {
             console.log(11223);
             this.getOrderUserInfo();
-          }else{
-            this.selectOpts()
-            this.addExpert()
+          } else {
+            this.selectOpts();
+            this.addExpert();
           }
         }
       },
@@ -228,14 +234,14 @@ export default {
   mounted() {},
 
   methods: {
-    selectOpts(){
+    selectOpts() {
       selectOrderUser({
         task_type: this.$route.query.typeId,
-        p_id : this.$route.query.p_id
+        p_id: this.$route.query.p_id,
       }).then((res) => {
         console.log(res);
         if (res.code == 200) {
-         this.expertList = [...res.data.list]
+          this.expertList = [...res.data.list];
         }
       });
     },
@@ -244,6 +250,7 @@ export default {
     },
     /* 提交数据 */
     subData() {
+      
       let obj = { ...this.dataForm };
       obj.link_date = this.dataForm.link_date[0];
       obj.link_date_e = this.dataForm.link_date[1];
@@ -253,6 +260,11 @@ export default {
       obj.eyes_date_e = this.dataForm.eyes_date[1];
       obj.interactive_date = this.dataForm.interactive_date[0];
       obj.interactive_date_e = this.dataForm.interactive_date[1];
+      if (this.orderType != 2 && obj.ids.length == 0) {
+        this.$message.error("请选择达人");
+        return
+      }
+      if (!this.verifyData(obj)) return;
       /* 编辑用户详情 */
       if (this.orderType == 2) {
         obj.id = this.editId;
@@ -265,16 +277,54 @@ export default {
             this.$$message.error(res.msg);
           }
         });
-      }else{
-        obj.task_id=this.$route.query.id
-        addOrderUser(obj).then(res=>{
+      } else {
+        obj.task_id = this.$route.query.id;
+        addOrderUser(obj).then((res) => {
           if (res.code == 200) {
             this.$message.success("提交成功");
             this.handleClose();
           } else {
             this.$$message.error(res.msg);
           }
-        })
+        });
+      }
+    },
+    verifyData(obj) {
+      let {
+        is_link,
+        link_date,
+        is_included,
+        included_date,
+        is_eyes,
+        eyes_date,
+        is_interactive,
+        interactive_date,
+        is_recovery,
+        recovery_day,
+      } = obj;
+      let str = "";
+      if (is_link == 1 && link_date == null) {
+        str = "请选择发布链接时间";
+      } else if (is_included == 1 && included_date == null) {
+        str = "请选择收录图回收时间";
+      } else if (is_eyes == 1 && eyes_date == "") {
+        str = "请选择小眼睛图回收时间";
+      } else if (is_interactive == 1 && interactive_date == null) {
+        str = "请选择互动图回收时间";
+      } else if (
+        is_recovery == 1 &&
+        (recovery_day == "" || recovery_day == "0")
+      ) {
+        str = "请选择数据回收时间";
+      } else {
+        str = "";
+      }
+
+      if (str != "") {
+        this.$message.error(str);
+        return false;
+      } else {
+        return true;
       }
     },
     getOrderUserInfo() {
@@ -300,13 +350,13 @@ export default {
         }
       });
     },
-    addExpert(){
-      let obj={
+    addExpert() {
+      let obj = {
         id: this.$route.query.id,
-      }
-      backOrderInfo(obj).then(res=>{
+      };
+      backOrderInfo(obj).then((res) => {
         if (res.code == 200) {
-          this.dataForm = Object.assign({},this.dataForm,res.data);
+          this.dataForm = Object.assign({}, this.dataForm, res.data);
           this.dataForm.included_date = [
             res.data.included_date,
             res.data.included_date,
@@ -319,7 +369,7 @@ export default {
           ];
           console.log(this.dataForm);
         }
-      })
+      });
     },
     onSubmit() {
       console.log("submit!");

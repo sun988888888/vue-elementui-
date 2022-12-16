@@ -174,7 +174,7 @@ export default {
       default: 1,
     },
     p_id: {
-      type: Number,
+      type: [Number, String],
       default: 1,
     },
     selectList: {
@@ -212,7 +212,7 @@ export default {
         is_link: 1,
         link_date: "",
         is_included: 1,
-        included_date: ["2022-12-13 12:08:06", "2022-12-16"],
+        included_date: "",
         is_eyes: 1,
         eyes_date: "",
         is_interactive: 1,
@@ -241,8 +241,54 @@ export default {
     onSubmit() {
       console.log("submit!");
     },
+    verifyData() {
+      let {
+        title,
+        task_type,
+        ids,
+        is_link,
+        link_date,
+        is_included,
+        included_date,
+        is_eyes,
+        eyes_date,
+        is_interactive,
+        interactive_date,
+        is_recovery,
+        recovery_day,
+      } = this.dataForm;
+      let str = "";
+      if (title == "") {
+        str = "请填写任务标题";
+      } else if (task_type == "") {
+        str = "请选择任务类型";
+      } else if (task_type != "" && ids.length==0) {
+        str = "请选择达人";
+      } else if (is_link == 1 && link_date == "") {
+        console.log('ids: ', ids);
+        str = "请选择发布链接时间";
+      } else if (is_included == 1 && included_date == "") {
+        str = "请选择收录图回收时间";
+      } else if (is_eyes == 1 && eyes_date == "") {
+        str = "请选择小眼睛图回收时间";
+      } else if (is_interactive == 1 && interactive_date == "") {
+        str = "请选择互动图回收时间";
+      } else if (is_recovery == 1 && recovery_day == "") {
+        str = "请选择数据回收时间";
+      } else {
+        str = "";
+      }
+
+      if (str != "") {
+        this.$message.error(str);
+        return false;
+      } else {
+        return true;
+      }
+    },
     /* 提交数据 */
     subData() {
+      if (!this.verifyData()) return;
       console.log(this.p_id);
       let obj = { ...this.dataForm };
       obj.link_date = this.dataForm.link_date[0];
@@ -257,11 +303,11 @@ export default {
       console.log(obj);
       addRecycleOrder(obj).then((res) => {
         console.log(res);
-        if(res.code==200){
-          this.$message.success('提交成功')
-          this.handleClose()
-        }else{
-          this.$$message.error(res.msg)
+        if (res.code == 200) {
+          this.$message.success("提交成功");
+          this.handleClose();
+        } else {
+          this.$$message.error(res.msg);
         }
       });
     },
@@ -269,7 +315,7 @@ export default {
     selectOpts() {
       selectOrderUser({
         task_type: this.$route.query.id,
-        p_id:this.$route.query.id
+        p_id: this.$route.query.id,
       }).then((res) => {
         console.log(res);
         if (res.code == 200) {

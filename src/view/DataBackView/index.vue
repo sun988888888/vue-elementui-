@@ -63,13 +63,22 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="addOrder(2,scope.row.id)"
+          <el-button
+            type="primary"
+            size="mini"
+            @click="addOrder(2, scope.row.id)"
             >编辑</el-button
           >
           <el-button
             type="primary"
             size="mini"
-            @click="goDataBackDeatil(scope.row.id,scope.row.task_type,scope.row.p_id)"
+            @click="
+              goDataBackDeatil(
+                scope.row.id,
+                scope.row.task_type,
+                scope.row.p_id
+              )
+            "
             >查看</el-button
           >
         </template>
@@ -82,7 +91,11 @@
       :limit.sync="pageSize"
       @pagination="getDataList"
     />
-    <set-order :visiable.sync="dialogVisiable" :type.sync="orderType" :editType.sync="editType" />
+    <set-order
+      :visiable.sync="dialogVisiable"
+      :type.sync="orderType"
+      :editType.sync="editType"
+    />
   </div>
 </template>
 
@@ -98,7 +111,7 @@ export default {
   },
   data() {
     return {
-      editType:1, //编辑任务
+      editType: 1, //编辑任务
       dialogVisiable: false, //弹窗
       isLoading: false,
       currentPage: 1, //当前页数
@@ -114,7 +127,15 @@ export default {
       multipleSelection: [],
     };
   },
-
+  watch: {
+    dialogVisiable: {
+      handler: function (newval) {
+        if (newval == false) {
+          this.getDataList();
+        }
+      },
+    },
+  },
   mounted() {
     this.getDataList();
   },
@@ -158,8 +179,8 @@ export default {
           this.isLoading = false;
         });
     },
-    addOrder(type,id) {
-      this.editType=id
+    addOrder(type, id) {
+      this.editType = id;
       this.orderType = type;
       this.dialogVisiable = true;
     },
@@ -167,10 +188,10 @@ export default {
       console.log(val);
       this.multipleSelection = val;
     },
-    goDataBackDeatil(id,typeId,p_id) {
+    goDataBackDeatil(id, typeId, p_id) {
       this.$router.push({
         path: "/layout/DataBackDetail",
-        query: { id,typeId,p_id },
+        query: { id, typeId, p_id },
       });
     },
   },

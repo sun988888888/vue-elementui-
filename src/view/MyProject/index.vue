@@ -116,9 +116,6 @@ export default {
   },
 
   methods: {
-    /* uploadTabe() {
-      uploadTaber(document.querySelector("#tableList"), "测试.xlsx");
-    }, */
     serachData(type) {
       this.isLoading = true;
       /* 如果type为1 为搜索查询 */
