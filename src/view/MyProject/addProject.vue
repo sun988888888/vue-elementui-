@@ -16,8 +16,6 @@
               :name="filename"
               :data="projectData"
               :headers="headerObj"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
               :on-success="addSuc"
               :on-error="failUpload"
               :before-upload="beforeUpload"
@@ -49,7 +47,7 @@
 
 <script>
 import { getStorage } from "@/utils/setStorage";
-//import { editProject } from "@/api";
+//import { editProject } from "@/api/api";
 export default {
   name: "ProjectOneAddproject",
   props: {
@@ -150,14 +148,14 @@ export default {
     },
     /* 提交数据 */
     submitData() {
+      console.log(this.fileList);
       if ((this.formLabelAlign.name == "" || this.fileList == []) && this.orderType==1) {
         this.$message.warning("请填写完整");
         return;
-      }else if(this.fileList == []){
+      }else if(this.$refs.upload.uploadFiles.length==0){
         this.$message.warning("请上传表格");
         return;
       }
-
       this.$refs.upload.submit();
     },
     /* 下载文档 */
@@ -166,16 +164,7 @@ export default {
       a.href = `/名片列表.xlsx`;
       a.download = "导入模板.xlsx";
       a.click();
-    },
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
+    }
   },
 };
 </script>

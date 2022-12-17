@@ -151,7 +151,7 @@ import {
   addOrderUser,
   selectOrderUser,
   backOrderInfo,
-} from "@/api";
+} from "@/api/api";
 export default {
   name: "ProjectOneDataback",
   props: {
@@ -264,7 +264,9 @@ export default {
         this.$message.error("请选择达人");
         return
       }
+      console.log(111);
       if (!this.verifyData(obj)) return;
+      console.log(222);
       /* 编辑用户详情 */
       if (this.orderType == 2) {
         obj.id = this.editId;

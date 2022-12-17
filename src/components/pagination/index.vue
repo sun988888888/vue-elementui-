@@ -44,7 +44,7 @@ export default {
       type: Boolean,
       default: true,
     },
-    autoScroll: {
+    autoScroll: { 
       type: Boolean,
       default: true,
     },

@@ -119,7 +119,7 @@
 <script>
 import Pagination from "@/components/pagination";
 import DataBack from "./dataBack.vue";
-import { getProjectDetail, selectTypes } from "@/api";
+import { getProjectDetail, selectTypes } from "@/api/api";
 export default {
   name: "ProjectOneIndex",
   components: { DataBack, Pagination },

@@ -102,7 +102,7 @@
 
 <script>
 import SetOrder from "./setOrder.vue";
-import { orderList } from "@/api";
+import { orderList } from "@/api/api";
 import Pagination from "@/components/pagination";
 export default {
   name: "ProjectOneIndex",

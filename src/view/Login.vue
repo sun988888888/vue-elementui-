@@ -41,7 +41,7 @@
 
 <script>
 import { setStorage } from "@/utils/setStorage.js";
-import { login } from "@/api.js";
+import { login } from "@/api/api.js";
 export default {
   name: "OperaLogin",
   data() {

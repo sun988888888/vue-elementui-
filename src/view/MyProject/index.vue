@@ -81,7 +81,7 @@
 <script>
 //import { uploadTaber } from "@/utils/util";
 import AddProject from "./addProject.vue";
-import { getProjectList } from "@/api";
+import { getProjectList } from "@/api/api";
 import Pagination from "@/components/pagination";
 export default {
   name: "ProjectOneIndex",

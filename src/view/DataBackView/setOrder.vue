@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { editTask, backOrderInfo } from "@/api";
+import { editTask, backOrderInfo } from "@/api/api";
 export default {
   name: "ProjectOneDataback",
   props: {

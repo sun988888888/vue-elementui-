@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import { addRecycleOrder, selectOrderUser } from "@/api";
+import { addRecycleOrder, selectOrderUser } from "@/api/api";
 export default {
   name: "ProjectOneDataback",
   props: {

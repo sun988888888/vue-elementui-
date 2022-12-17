@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { studentList } from "@/api.js";
+import { studentList } from "@/api/api.js";
 import Pagination from '@/components/pagination'
 export default {
   components:{

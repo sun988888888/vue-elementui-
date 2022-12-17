@@ -125,7 +125,7 @@
 
 <script>
 import Pagination from "@/components/pagination";
-import { orderUserList } from "@/api";
+import { orderUserList } from "@/api/api";
 import AddExpert from "./addExpert.vue";
 import { filesToRar, uploadElExcel } from "@/utils/util";
 /* import table2excel from 'js-table2excel' */
