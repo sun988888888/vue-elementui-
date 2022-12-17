@@ -19,6 +19,15 @@ import store from './store'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
+router.beforeEach((to,from,next)=>{
+  if(!localStorage.getItem('token')){
+    if(to.path!='/login'){
+      next('/login')
+    } next()
+  } next()
+
+})
+
 new Vue({
   store,
   router,
