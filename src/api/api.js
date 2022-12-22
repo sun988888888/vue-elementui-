@@ -156,11 +156,14 @@ export function addOrderUser(data) {
   })
 }
 
-/* 学生列表数据 */
-export function studentList(params){
+/* 分享 */
+export function orderShare(data) {
   return service({
-    method: 'get',
-    url: '/students',
-    params
+    method: 'post',
+    url: '/task@share',
+    data:{
+      api: 'task@share',
+      data
+    }
   })
 }

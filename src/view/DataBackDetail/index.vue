@@ -19,7 +19,7 @@
         >
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-share">创建分享</el-button>
+        <el-button type="primary" icon="el-icon-share" @click="shareMini">创建分享</el-button>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-download" @click="uploadExcel"
@@ -125,7 +125,7 @@
 
 <script>
 import Pagination from "@/components/pagination";
-import { orderUserList } from "@/api/api";
+import { orderUserList,orderShare } from "@/api/api";
 import AddExpert from "./addExpert.vue";
 import { filesToRar, uploadElExcel } from "@/utils/util";
 /* import table2excel from 'js-table2excel' */
@@ -169,6 +169,30 @@ export default {
   },
 
   methods: {
+     /* 复制分享 */
+    shareMini() {
+      orderShare().then((res) => {
+        console.log(res);
+        if (res.code == 200) {
+/*           let content = "";
+          content = `【十七点五】
+粉丝要求：${"不限"}
+内容类型：${"test"}
+商品品牌：${"test"}
+招募人数：${"test"}
+小程序链接：${res.data.link}\n
+莓果通告，给达人的晋级宝箱，给品牌的爆款指南，走红“莓”门槛！
+        `; */
+          this.$copyText(res.data.link)
+            .then(() => {
+              this.$message.success("已复制");
+            })
+            .catch(() => {
+              this.$message.error("复制失败");
+            });
+        }
+      });
+    },
     uploadExcel() {
       let newArr = [];
       if(this.multipleSelection.length==0){
@@ -269,7 +293,7 @@ export default {
             this.isLoading = false;
             this.currentPage = current_page;
             this.total = total;
-            data = [
+            /* data = [
               {
                 id: 5,
                 nickname: "5936122286",
@@ -321,7 +345,7 @@ export default {
                 collected_count: 0,
                 comments_count: 0,
               },
-            ];
+            ]; */
             this.tableData = data;
             console.log(this.tableData);
           } else {

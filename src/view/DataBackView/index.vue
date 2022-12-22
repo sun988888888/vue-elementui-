@@ -20,7 +20,9 @@
         >
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-share">创建分享</el-button>
+        <el-button type="primary" icon="el-icon-share" @click="shareMini"
+          >创建分享</el-button
+        >
       </el-form-item>
       <!-- <el-form-item>
         <el-button type="primary" icon="el-icon-download" @click="uploadLink"
@@ -102,7 +104,7 @@
 
 <script>
 import SetOrder from "./setOrder.vue";
-import { orderList } from "@/api/api";
+import { orderList, orderShare } from "@/api/api";
 import Pagination from "@/components/pagination";
 export default {
   name: "ProjectOneIndex",
@@ -143,14 +145,28 @@ export default {
 
   methods: {
     /* 复制分享 */
-    uploadLink() {
-      this.$copyText("1111")
-        .then(() => {
-          this.$message.success("已复制");
-        })
-        .catch(() => {
-          this.$message.error("复制失败");
-        });
+    shareMini() {
+      orderShare().then((res) => {
+        console.log(res);
+        if (res.code == 200) {
+/*           let content = "";
+          content = `【十七点五】
+粉丝要求：${"不限"}
+内容类型：${"test"}
+商品品牌：${"test"}
+招募人数：${"test"}
+小程序链接：${res.data.link}\n
+莓果通告，给达人的晋级宝箱，给品牌的爆款指南，走红“莓”门槛！
+        `; */
+          this.$copyText(res.data.link)
+            .then(() => {
+              this.$message.success("已复制");
+            })
+            .catch(() => {
+              this.$message.error("复制失败");
+            });
+        }
+      });
     },
     getDataList(type) {
       this.isLoading = true;
