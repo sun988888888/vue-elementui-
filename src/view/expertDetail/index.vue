@@ -7,7 +7,9 @@
         <el-input v-model="formInline.user" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="getData(1)">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="getData(1)"
+          >搜索</el-button
+        >
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-plus" @click="addOrder(1)"
@@ -64,21 +66,22 @@
       <el-table-column align="center" label="收录图">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.included_img"
-            :preview-src-list="[scope.row.included_img]"
-          >
-          </el-image>
+            :src="static_path + scope.row.included_img"
+            :preview-src-list="[static_path + scope.row.included_img]"
+            v-if="scope.row.included_img"
+          ></el-image>
+          <div v-else></div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="小眼睛图">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.eyes_img"
-            :preview-src-list="[scope.row.eyes_img]"
+            :src="static_path + scope.row.eyes_img"
+            :preview-src-list="[static_path + scope.row.eyes_img]"
+            v-if="scope.row.eyes_img"
           >
           </el-image>
+          <div v-else></div>
         </template>
       </el-table-column>
       <el-table-column prop="eyes_num" align="center" label="小眼睛数">
@@ -86,11 +89,12 @@
       <el-table-column prop="interactive_img" align="center" label="互动图">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.img3"
-            :preview-src-list="[scope.row.img3]"
+            :src="static_path + scope.row.interactive_img"
+            :preview-src-list="[static_path + scope.row.interactive_img]"
+            v-if="scope.row.interactive_img"
           >
           </el-image>
+          <div v-else></div>
         </template>
       </el-table-column>
       <el-table-column prop="liked_count" align="center" label="点赞数">
@@ -112,7 +116,12 @@
       :limit.sync="pageSize"
       @pagination="getData"
     />
-    <data-back :visiable.sync="dialogVisiable" :type.sync="orderType" :selectList.sync="selectList" :p_id.sync="$route.query.id"/>
+    <data-back
+      :visiable.sync="dialogVisiable"
+      :type.sync="orderType"
+      :selectList.sync="selectList"
+      :p_id.sync="$route.query.id"
+    />
   </div>
 </template>
 
@@ -125,7 +134,8 @@ export default {
   components: { DataBack, Pagination },
   data() {
     return {
-      selectList:[],//下拉数据
+      static_path: "", //基础路径
+      selectList: [], //下拉数据
       isLoading: false,
       currentPage: 1, //当前页数
       pageSize: 10, //每页显示条数
@@ -144,7 +154,7 @@ export default {
   watch: {
     dialogVisiable: {
       handler: function (newval) {
-        if(newval==false){
+        if (newval == false) {
           this.getData();
         }
       },
@@ -152,24 +162,25 @@ export default {
   },
   mounted() {
     this.getData();
-    this.getselectTypes()
+    this.getselectTypes();
   },
 
   methods: {
     getData(type) {
       this.isLoading = true;
-      let obj={
+      let obj = {
         p_id: this.$route.query.id,
         pageSize: this.pageSize,
         page: this.currentPage,
-      }
-      if(type==1){
-        obj.keyword=this.formInline.user
+      };
+      if (type == 1) {
+        obj.keyword = this.formInline.user;
       }
       getProjectDetail(obj)
         .then((res) => {
           if (res.code == 200) {
-            let { data, current_page, total } = res.data;
+            let { data, current_page, total, static_path } = res.data;
+            this.static_path = static_path;
             this.isLoading = false;
             this.currentPage = current_page;
             this.total = total;
@@ -184,13 +195,13 @@ export default {
         });
     },
     getselectTypes() {
-      selectTypes( {
-          map_keys: ["task_type"],
-          is_all: 0,
-        }).then((res) => {
-          if(res.code==200){
-            this.selectList=res.data.list.task_type
-          }
+      selectTypes({
+        map_keys: ["task_type"],
+        is_all: 0,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.selectList = res.data.list.task_type;
+        }
         console.log(res);
       });
     },

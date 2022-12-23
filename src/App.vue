@@ -10,19 +10,30 @@ export default {
     //在页面刷新时将vuex里的state信息保存到sessionStorage里
     window.addEventListener("beforeunload", () => {
       console.log("页面将要刷新了");
-      let str = JSON.stringify(this.$store.state.tagsView.cachedViews);
-      if (this.$store.state.tagsView.cachedViews.length > 0) {
-        sessionStorage.setItem("state", str);
+      //let str = JSON.stringify(this.$store.state.tagsView.cachedViews);
+      let arr = [];
+      if (this.$store.state.tagsView.visitedViews.length > 0) {
+        this.$store.state.tagsView.visitedViews.forEach((item) => {
+          let obj = {
+            fullPath: item.fullPath,
+            name: item.name,
+            path: item.path,
+            title: item.title,
+            params: item.params,
+            query: item.query,
+          };
+          arr.push(obj);
+        });
+        sessionStorage.setItem("state", JSON.stringify(arr));
       }
-      
     });
-    if (JSON.parse(sessionStorage.getItem("state")).length>1) {
-      this.getDataTags(this.$router.options.routes);
+    if (JSON.parse(sessionStorage.getItem("state")).length > 1) {
+      JSON.parse(sessionStorage.getItem("state")).forEach((item) => {
+        this.$store.dispatch("tagsView/addView", item);
+      });
     }
   },
   mounted() {
-    console.log(JSON.parse(sessionStorage.getItem("state")));
-    
   },
   watch: {
     $route() {
@@ -30,7 +41,7 @@ export default {
     },
   },
   methods: {
-    getDataTags(arr) {
+    /* getDataTags(arr) {
       arr.forEach((item) => {
         if (JSON.parse(sessionStorage.getItem("state")).includes(item.name)) {
           this.$store.dispatch("tagsView/addView", item);
@@ -39,7 +50,7 @@ export default {
           this.getDataTags(item.children);
         }
       });
-    }
+    }, */
   },
 };
 </script>

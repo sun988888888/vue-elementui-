@@ -2,7 +2,7 @@
   <div class="header">
     <el-header>
       <div class="title">
-        <img style="height: 100%" src="@/assets/LOGO二.png" alt="" />十七点五
+        十七点五
       </div>
       <div v-popover:popover>{{ name }}</div>
     </el-header>

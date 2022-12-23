@@ -19,7 +19,9 @@
         >
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-share" @click="shareMini">创建分享</el-button>
+        <el-button type="primary" icon="el-icon-share" @click="shareMini"
+          >创建分享</el-button
+        >
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-download" @click="uploadExcel"
@@ -62,21 +64,22 @@
       <el-table-column align="center" label="收录图">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.included_img"
-            :preview-src-list="[scope.row.included_img]"
-          >
-          </el-image>
+            :src="static_path + scope.row.included_img"
+            :preview-src-list="[static_path + scope.row.included_img]"
+            v-if="scope.row.included_img"
+          ></el-image>
+          <div v-else></div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="小眼睛图">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.eyes_img"
-            :preview-src-list="[scope.row.eyes_img]"
+            :src="static_path + scope.row.eyes_img"
+            :preview-src-list="[static_path + scope.row.eyes_img]"
+            v-if="scope.row.eyes_img"
           >
           </el-image>
+          <div v-else></div>
         </template>
       </el-table-column>
       <el-table-column prop="eyes_num" align="center" label="小眼睛数">
@@ -84,11 +87,12 @@
       <el-table-column align="center" label="互动图">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
-            :src="scope.row.interactive_img"
-            :preview-src-list="[scope.row.interactive_img]"
+            :src="static_path + scope.row.interactive_img"
+            :preview-src-list="[static_path + scope.row.interactive_img]"
+            v-if="scope.row.interactive_img"
           >
           </el-image>
+          <div v-else></div>
         </template>
       </el-table-column>
       <el-table-column prop="liked_count" align="center" label="点赞数">
@@ -125,7 +129,7 @@
 
 <script>
 import Pagination from "@/components/pagination";
-import { orderUserList,orderShare } from "@/api/api";
+import { orderUserList, orderShare } from "@/api/api";
 import AddExpert from "./addExpert.vue";
 import { filesToRar, uploadElExcel } from "@/utils/util";
 /* import table2excel from 'js-table2excel' */
@@ -153,6 +157,7 @@ export default {
       tableData: [],
       /* 选中的数据 */
       multipleSelection: [],
+      static_path: "", //基础路径
     };
   },
   watch: {
@@ -169,12 +174,12 @@ export default {
   },
 
   methods: {
-     /* 复制分享 */
+    /* 复制分享 */
     shareMini() {
       orderShare().then((res) => {
         console.log(res);
         if (res.code == 200) {
-/*           let content = "";
+          /*           let content = "";
           content = `【十七点五】
 粉丝要求：${"不限"}
 内容类型：${"test"}
@@ -195,24 +200,41 @@ export default {
     },
     uploadExcel() {
       let newArr = [];
-      if(this.multipleSelection.length==0){
-        this.$message.warning('请勾选要导出的列表')
-        return
+      if (this.multipleSelection.length == 0) {
+        this.$message.warning("请勾选要导出的列表");
+        return;
       }
-      this.multipleSelection.forEach((item) => {
-        newArr.push({
-          fileUrl: item.included_img,
-          renameFileName: this.$route.query.orderName + '-' + item.nickname + "-收录图.png",
-        });
-        newArr.push({
-          fileUrl: item.eyes_img,
-          renameFileName: this.$route.query.orderName + '-' + item.nickname + "-小眼睛图.png",
-        });
-        newArr.push({
-          fileUrl: item.interactive_img,
-          renameFileName: this.$route.query.orderName + '-' + item.nickname + "-互动图.png",
-        });
-      });
+      let excelData = this.multipleSelection.map(item=>{
+        let obj={...item}
+        if (item.included_img) {
+          newArr.push({
+            fileUrl: this.static_path + item.included_img,
+            renameFileName:
+              this.$route.query.orderName + "-" + item.nickname + "-收录图.png",
+          });
+          obj.included_img=this.static_path+item.included_img
+        }
+        if (item.eyes_img) {
+          newArr.push({
+            fileUrl: this.static_path + item.eyes_img,
+            renameFileName:
+              this.$route.query.orderName +
+              "-" +
+              item.nickname +
+              "-小眼睛图.png",
+          });
+          obj.eyes_img=this.static_path+item.eyes_img
+        }
+        if (item.interactive_img) {
+          newArr.push({
+            fileUrl: this.static_path + item.interactive_img,
+            renameFileName:
+            this.$route.query.orderName + "-" + item.nickname + "-互动图.png",
+          });
+          obj.interactive_img=this.static_path+item.interactive_img
+        }
+        return obj
+      })
       let commons = [
         {
           title: "ID", //表格名称
@@ -271,9 +293,10 @@ export default {
           type: "text",
         },
       ];
-      console.log("newArr: ", newArr);
-      uploadElExcel(commons, this.multipleSelection);
-      filesToRar(newArr, "图片打包", this);
+      uploadElExcel(commons, excelData);
+      if (newArr.length > 0) {
+        filesToRar(newArr, "图片打包", this);
+      }
     },
 
     getData(type) {
@@ -289,10 +312,12 @@ export default {
       orderUserList(obj)
         .then((res) => {
           if (res.code == 200) {
-            let { data, current_page, total } = res.data;
+            let { data, current_page, total, static_path } = res.data;
             this.isLoading = false;
             this.currentPage = current_page;
             this.total = total;
+            this.static_path = static_path;
+            console.log(this.static_path);
             /* data = [
               {
                 id: 5,
@@ -345,7 +370,7 @@ export default {
                 collected_count: 0,
                 comments_count: 0,
               },
-            ]; */
+            ];  */
             this.tableData = data;
             console.log(this.tableData);
           } else {

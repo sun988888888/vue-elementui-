@@ -6,7 +6,7 @@
         ref="tag"
         :key="tag.path"
         :class="isActive(tag)?'active':''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
+        :to="{ path: tag.fullPath, query: tag.query, fullPath: tag.fullPath }"
         tag="span"
         class="tags-view-item"
       >
@@ -95,7 +95,7 @@ export default {
     toLastView(visitedViews) {
       const latestView = visitedViews.slice(-1)[0]
       if (visitedViews.length>0) {
-        this.$router.push(latestView.path)
+        this.$router.push(latestView.fullPath)
       } else {
         this.$router.push('/')
       }
