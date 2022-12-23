@@ -23,6 +23,9 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-### 接口地址
-地址：[https://www.showdoc.com.cn/jinducasey/8321036098744323]
-密码：jinduVIP
+### 线上地址
+地址：[https://admin.meiguo.life]
+
+### 发布的node版本
+v10
+

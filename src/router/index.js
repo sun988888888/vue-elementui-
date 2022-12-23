@@ -59,5 +59,5 @@ export default new Router({
       component: () => import('@/view/notFind.vue') //官方推荐路由懒加载
     }
   ],
-  mode: 'history'
+  mode: 'hash'
 })
