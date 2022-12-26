@@ -293,6 +293,7 @@ export default {
           type: "text",
         },
       ];
+      /* 导出表格的时候对npm包做了修改进行实现兼容  部分commons是img类型但是是text空的情况 */
       uploadElExcel(commons, excelData);
       if (newArr.length > 0) {
         filesToRar(newArr, "图片打包", this);
