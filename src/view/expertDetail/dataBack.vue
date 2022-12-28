@@ -19,7 +19,7 @@
           <el-form-item label="任务类型" prop="task_type">
             <el-select
               v-model="dataForm.task_type"
-              placeholder="请选择活动区域"
+              placeholder="请选择任务类型"
               @change="selectOpts"
             >
               <el-option
