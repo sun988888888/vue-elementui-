@@ -49,6 +49,13 @@ export default new Router({
           iconClass: 'fa fa-line-chart',
           component: () => import('@/view/DataBackDetail'),
         },
+        {
+          path: '/layout/expertData',
+          name: '达人资源',
+          iconClass: 'fa fa-line-chart',
+          component: () => import('@/view/expertData'),
+          meta: {keepAlive: true} //是否开启缓存
+        },
 
       ]
     },
