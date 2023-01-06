@@ -439,62 +439,54 @@ let skinOptions = [
 /* 互动数据类型 */
 let interactOptions = [
   {
-    value: "点击中位数",
-    label: "点击中位数",
-  },
-  {
-    value: "点赞中位数",
+    value: "likeMid",
     label: "点赞中位数",
   },
   {
-    value: "评论中位数",
+    value: "cmtMid",
     label: "评论中位数",
   },
   {
-    value: "收藏中位数",
+    value: "collectMid",
     label: "收藏中位数",
   },
   {
-    value: "点击平均数",
-    label: "点击平均数",
-  },
-  {
-    value: "点赞平均数",
+    value: "likeMean",
     label: "点赞平均数",
   },
   {
-    value: "评论平均数",
+    value: "cmtMean",
     label: "评论平均数",
   },
   {
-    value: "收藏平均数",
+    value: "collectMean",
     label: "收藏平均数",
   },
 ];
 /* 报价类型 */
 let offerOptions = [
   {
-    value: "图文报备",
+    value: "bbpprice",
     label: "图文报备",
   },
   {
-    value: "图文非报备",
+    value: "article_price",
     label: "图文非报备",
   },
   {
-    value: "图文非报备合集",
+    value: "article_collect_price",
     label: "图文非报备合集",
   },
   {
-    value: "视频报备",
+    value: "bbvprice",
     label: "视频报备",
   },
   {
-    value: "视频非报备",
+    value: "video_price",
     label: "视频非报备",
   },
   {
-    value: "视频非报备合集",
+    value: "video_collect_price",
     label: "视频非报备合集",
   },
 ];
@@ -535,7 +527,7 @@ let excelCommons = [
   },
   {
     title: "平台id",
-    key: "id",
+    key: "account_id",
     type: "text",
   },
   {
@@ -550,17 +542,17 @@ let excelCommons = [
   },
   {
     title: "领域",
-    key: "tags",
+    key: "domain",
     type: "text",
   },
   {
     title: "账号人设",
-    key: "accountSetting",
+    key: "persona",
     type: "text",
   },
   {
     title: "内容形式",
-    key: "contentForm",
+    key: "content_type",
     type: "text",
   },
   {

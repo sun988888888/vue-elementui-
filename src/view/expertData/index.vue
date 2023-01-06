@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="tips">
+      <i class="el-icon-warning-outline"></i
+      >账号人设/内容形式/粉丝画像/宝宝信息/皮肤信息数据量较少，建议勿选。数据陆续补充中。
+    </div>
     <el-form :model="searchForm" label-width="100px">
       <el-form-item label="平台" id="vg-checkbox" :show-message="false">
         <el-checkbox-group v-model="searchForm.selectedPlatform">
@@ -101,7 +105,7 @@
               :key="index"
             >
               <div style="margin-right: 10px">报价类型</div>
-              <el-select v-model="item2.type" placeholder="请选择">
+              <el-select v-model="item2.field" placeholder="请选择">
                 <el-option
                   v-for="item in offerOptions"
                   :key="item.value"
@@ -114,19 +118,19 @@
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="item2.num1"
+                v-model="item2.min"
               />
               <div>--</div>
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="item2.num2"
+                v-model="item2.max"
               />
             </div>
             <el-button class="add_item" type="primary" @click="addInteract(2)"
               >+</el-button
             >
-            <div class="inp_wrap_btn">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
         <!-- 互动数据 -->
@@ -144,7 +148,7 @@
               :key="index"
             >
               <div style="margin-right: 10px">数据类型</div>
-              <el-select v-model="item2.type" placeholder="请选择">
+              <el-select v-model="item2.field" placeholder="请选择">
                 <el-option
                   v-for="item in interactOptions"
                   :key="item.value"
@@ -157,19 +161,19 @@
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="item2.num1"
+                v-model="item2.min"
               />
               <div>--</div>
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="item2.num2"
+                v-model="item2.max"
               />
             </div>
             <el-button class="add_item" type="primary" @click="addInteract(1)"
               >+</el-button
             >
-            <div class="inp_wrap_btn">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
         <!--粉丝量-->
@@ -221,7 +225,7 @@
               :key="index"
             >
               <div style="margin-right: 10px">年龄段</div>
-              <el-select v-model="item2.type" placeholder="请选择">
+              <el-select v-model="item2.field" placeholder="请选择">
                 <el-option
                   v-for="item in ageOptions"
                   :key="item.value"
@@ -234,19 +238,19 @@
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="item2.num1"
+                v-model="item2.min"
               />
               <div>--</div>
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="item2.num2"
+                v-model="item2.max"
               />
             </div>
             <el-button class="add_item" type="primary" @click="addInteract(3)"
               >+</el-button
             >
-            <div class="inp_wrap_btn">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
         <!--性别占比-->
@@ -286,16 +290,74 @@
                 v-model="searchForm.woman.num2"
               />
             </div>
-            <div class="inp_wrap_btn">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
       </el-form-item>
       <el-form-item label="其他信息" id="vg-checkbox" :show-message="false">
         <div class="data_request">
           <div v-popover:babypop class="data_item">宝宝信息</div>
-          <div v-popover:skinpop class="data_item">皮肤信息</div>
+          <!-- <div v-popover:skinpop class="data_item">皮肤信息</div> -->
           <div v-popover:bloggerpop class="data_item">博主所在地</div>
+          <div v-popover:skinSpecialtyPop class="data_item">皮肤特质</div>
+          <div v-popover:skinColorPop class="data_item">肤色</div>
+          <div v-popover:skinSensitivePop class="data_item">敏感肌</div>
         </div>
+        <!-- 敏感肌 -->
+        <el-popover
+          ref="skinSensitivePop"
+          placement="bottom"
+          width="300"
+          trigger="click"
+          v-model="popShow.showskinSensitive"
+        >
+          <div class="interactpop_content pop_content">
+            <el-radio-group v-model="searchForm.skinSensitive">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="0">否</el-radio>
+              <el-radio label="null">未选择</el-radio>
+            </el-radio-group>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
+          </div>
+        </el-popover>
+        <!-- 肤色 -->
+        <el-popover
+          ref="skinColorPop"
+          placement="bottom"
+          width="300"
+          trigger="click"
+          v-model="popShow.showskinColor"
+        >
+          <div class="interactpop_content pop_content">
+            <el-radio-group v-model="searchForm.skinColor">
+              <el-radio label="白色">白色</el-radio>
+              <el-radio label="黄色">黄色</el-radio>
+              <el-radio label="黑色">黑色</el-radio>
+              <el-radio label="黄黑皮">黄黑皮</el-radio>
+              <el-radio label="橄榄皮">橄榄皮</el-radio>
+              <el-radio label="null">未选择</el-radio>
+            </el-radio-group>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
+          </div>
+        </el-popover>
+        <!-- 皮肤特质 -->
+        <el-popover
+          ref="skinSpecialtyPop"
+          placement="bottom"
+          width="300"
+          trigger="click"
+          v-model="popShow.showskinSpecialty"
+        >
+          <div class="interactpop_content pop_content">
+            <el-radio-group v-model="searchForm.skinSpecialty">
+              <el-radio label="干皮">干皮</el-radio>
+              <el-radio label="油皮">油皮</el-radio>
+              <el-radio label="混合皮">混合皮</el-radio>
+              <el-radio label="null">未选择</el-radio>
+            </el-radio-group>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
+          </div>
+        </el-popover>
         <!-- 宝宝信息 -->
         <el-popover
           ref="babypop"
@@ -305,13 +367,12 @@
           v-model="popShow.showbabypop"
         >
           <div class="interactpop_content pop_content">
-            <div
-              class="interactpop_content_item"
-              v-for="(item2, index) in searchForm.babydistribute"
-              :key="index"
-            >
+            <div class="interactpop_content_item">
               <div style="margin-right: 10px">性别</div>
-              <el-select v-model="searchForm.babyData.sex" placeholder="请选择">
+              <el-select
+                v-model="searchForm.babyData.field"
+                placeholder="请选择"
+              >
                 <el-option
                   v-for="item in sexOptions"
                   :key="item.value"
@@ -324,16 +385,16 @@
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="searchForm.babyData.num1"
+                v-model="searchForm.babyData.min"
               />
               <div>--</div>
               <input
                 type="text"
                 class="interactpop_item_inp"
-                v-model="searchForm.babyData.num2"
+                v-model="searchForm.babyData.max"
               />
             </div>
-            <div class="inp_wrap_btn">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
         <!-- 皮肤信息 -->
@@ -352,7 +413,7 @@
               :options="skinOptions"
               :props="{ multiple: true }"
             ></el-cascader>
-            <div class="inp_wrap_btn" @click="searchList">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
         <!--博主所在地-->
@@ -388,16 +449,18 @@
                 </el-cascader>
               </div>
             </div>
-            <div class="inp_wrap_btn">确定</div>
+            <div class="inp_wrap_btn" @click="selectBtn">确定</div>
           </div>
         </el-popover>
       </el-form-item>
       <el-form-item label="辅助条件" id="vg-checkbox" :show-message="false">
         <div class="data_request contact_wrap">
-          <el-radio-group v-model="searchForm.contact">
+          <el-checkbox v-model="searchForm.is_contact">有联系方式</el-checkbox>
+          <el-checkbox v-model="searchForm.is_jianlian">已建联</el-checkbox>
+          <!-- <el-radio-group v-model="searchForm.contact">
             <el-radio :label="1">有联系方式</el-radio>
             <el-radio :label="2">已建联</el-radio>
-          </el-radio-group>
+          </el-radio-group> -->
         </div>
       </el-form-item>
       <el-form-item label="辅助搜索" id="vg-checkbox" :show-message="false">
@@ -439,7 +502,15 @@
         v-if="checkedKeys.includes('address')"
       >
       </el-table-column> -->
-    <el-table :data="expertTable" border style="width: 100%" id="tableData2">
+    <el-table
+      :data="expertTable"
+      border
+      style="width: 100%"
+      id="tableData2"
+      v-loading="isLoading"
+    >
+      <el-table-column align="center" prop="id" width="100" label="ID">
+      </el-table-column>
       <el-table-column
         align="center"
         prop="avatar_url"
@@ -478,7 +549,7 @@
       <el-table-column
         width="100"
         align="center"
-        prop="id"
+        prop="account_id"
         label="平台ID"
         v-if="checkedKeys.includes('address')"
       >
@@ -490,6 +561,11 @@
         label="主页链接"
         show-overflow-tooltip
       >
+        <template slot-scope="{ row }">
+          <a :href="row.link" target="_blank" rel="noopener noreferrer">{{
+            row.link
+          }}</a>
+        </template>
       </el-table-column>
       <el-table-column align="center" prop="sex" width="100" label="性别">
         <template slot-scope="{ row }">
@@ -498,7 +574,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="100" prop="tags" label="领域">
+      <el-table-column align="center" width="200" prop="domain" label="领域">
         <template slot-scope="scope">
           <div>
             <el-popover
@@ -548,13 +624,13 @@
                 </el-checkbox-group>
               </div>
               <div slot="reference" class="data_item">
-                {{ scope.row.tags }}
+                {{ scope.row.domain || "--" }}
               </div>
               <div style="text-align: right">
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="editTablePop(scope.$index)"
+                  @click="editTablePop(scope.$index, scope.row.id, 1)"
                   >确定</el-button
                 >
               </div>
@@ -564,18 +640,18 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="accountSetting"
+        prop="persona"
         width="100"
         label="账号人设"
       >
-        <template slot-scope="{ row }">
+        <template slot-scope="scope">
           <div>
             <el-popover
               ref="editAccountSetPop"
               placement="top"
               width="700"
               trigger="click"
-              v-model="row.editAccountSetShow"
+              v-model="scope.row.editAccountSetShow"
             >
               <div id="vg-checkbox2">
                 <el-checkbox-group v-model="editAccountSetting">
@@ -588,10 +664,15 @@
                 </el-checkbox-group>
               </div>
               <div slot="reference" class="data_item">
-                {{ row.accountSetting }}
+                {{ scope.row.persona || "--" }}
               </div>
               <div style="text-align: right">
-                <el-button type="primary" size="mini">确定</el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 2)"
+                  >确定</el-button
+                >
               </div>
             </el-popover>
           </div>
@@ -599,18 +680,18 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="contentForm"
+        prop="content_type"
         width="100"
         label="内容形式"
       >
-        <template slot-scope="{ row }">
+        <template slot-scope="scope">
           <div>
             <el-popover
               ref="editContentFormPop"
               placement="top"
               width="700"
               trigger="click"
-              v-model="row.editContentFormShow"
+              v-model="scope.row.editContentFormShow"
             >
               <div id="vg-checkbox2">
                 <el-checkbox-group v-model="editContentForm">
@@ -623,10 +704,15 @@
                 </el-checkbox-group>
               </div>
               <div slot="reference" class="data_item">
-                {{ row.contentForm }}
+                {{ scope.row.content_type || "--" }}
               </div>
               <div style="text-align: right">
-                <el-button type="primary" size="mini">确定</el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 3)"
+                  >确定</el-button
+                >
               </div>
             </el-popover>
           </div>
@@ -634,146 +720,241 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="isDip"
-        width="100"
-        label="是否可探店"
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="babyDes"
-        label="宝宝信息"
-        width="100"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="skin"
-        label="皮肤特质/肤色/敏感肌"
-        width="100"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        width="100"
-        align="center"
-        prop="nearNoteDate"
-        label="最近发布笔记时间"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="fans"
-        label="粉丝数"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="liked" label="点赞数">
-      </el-table-column>
-      <el-table-column align="center" prop="collected" label="收藏数">
-      </el-table-column>
-      <el-table-column align="center" prop="follows" label="关注数">
-      </el-table-column>
-
-      <el-table-column
-        align="center"
-        prop="likeMean"
-        label="点赞平均数（8篇-max-min）"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="collectMean"
-        label="收藏平均数（8篇-max-min）"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="cmtMean"
-        label="评论平均数（8篇-max-min）"
-        v-if="checkedKeys.includes('address')"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="likeMid"
-        label="点赞中位数（8篇-max-min）"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="collectMid"
-        label="收藏中位数（8篇-max-min）"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="cmtMid"
-        label="评论中位数（8篇-max-min）"
-        v-if="checkedKeys.includes('address')"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="videoPlay"
-        label="视频完播率"
-        v-if="checkedKeys.includes('address')"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="article_report_price"
+        width="110"
+        prop="bbpprice"
         label="图文报备报价"
       >
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editBbppricePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editBbppriceShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input type="text" v-model="editBbppriceInp" />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.bbpprice || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 4)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
+        width="120"
         align="center"
-        prop="article_noreport_price"
+        prop="article_price"
         label="图文非报备报价"
       >
-      </el-table-column
-      ><el-table-column
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editArticlePricePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editArticlePriceShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input type="text" v-model="editArticlePriceInp" />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.article_price || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 5)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        width="120"
         align="center"
         prop="article_collect_price"
-        label="图文合集报价"
+        label="图文非报备合集报价"
       >
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editArticleCollectPricePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editArticleCollectPriceShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input
+                  type="text"
+                  v-model="editArticleCollectPriceInp"
+                />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.article_collect_price || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 6)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         align="center"
-        prop="video_report_price"
+        prop="bbvprice"
+        width="110"
         label="视频报备报价"
       >
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editBbvpricePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editBbvpriceShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input type="text" v-model="editBbvpriceInp" />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.bbvprice || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 7)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         align="center"
-        prop="video_noreport_price"
+        prop="video_price"
+        width="120"
         label="视频非报备报价"
       >
-      </el-table-column
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editVideoPricePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editVideoPriceShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input type="text" v-model="editVideoPriceInp" />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.video_price || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 8)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template> </el-table-column
       ><el-table-column
+        width="120"
         align="center"
         prop="video_collect_price"
-        label="视频合集报价"
+        label="视频非报备合集报价"
       >
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editVideoPricePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editVideoCollectPriceShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input
+                  type="text"
+                  v-model="editVideoCollectPriceInp"
+                />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.video_collect_price || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 9)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column align="center" prop="rebate" label="返点">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="new_price_date"
-        label="最新报价时间"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="otherRemark" label="其余备注">
+      <el-table-column align="center" prop="rebate" width="100" label="返点">
+        <template slot-scope="scope">
+          <div>
+            <el-popover
+              ref="editRebatePop"
+              placement="top"
+              width="300"
+              trigger="click"
+              v-model="scope.row.editRebateShow"
+            >
+              <div id="vg-checkbox2">
+                最新报价：<input type="text" v-model="editRebateInp" />
+              </div>
+              <div slot="reference" class="data_item">
+                {{ scope.row.rebate || "--" }}
+              </div>
+              <div style="text-align: right">
+                <el-button
+                  style="margin-top: 10px"
+                  type="primary"
+                  size="mini"
+                  @click="editTablePop(scope.$index, scope.row.id, 10)"
+                  >确定</el-button
+                >
+              </div>
+            </el-popover>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         align="center"
@@ -786,38 +967,174 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="article_cpe"
-        label="图文cpe报备/非报备"
+        prop="is_tandian"
+        width="100"
+        label="是否可探店"
+      >
+        <template slot-scope="{ row }">
+          <div>
+            {{ row.is_tandian == 1 ? "是" : "否" }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="baby_info"
+        label="宝宝信息"
+        width="100"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="skin_type"
+        label="皮肤特质"
+        width="100"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="skin_color"
+        label="肤色"
+        width="100"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="is_sensitive"
+        label="敏感肌"
+        width="100"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="last_release_date"
+        label="最近发布笔记时间"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="fans"
+        label="粉丝数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column align="center" prop="liked" label="赞藏数">
+      </el-table-column>
+
+      <el-table-column
+        width="100"
+        align="center"
+        prop="viewMean"
+        label="阅读平均数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="likeMean"
+        label="点赞平均数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="collectMean"
+        label="收藏平均数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="cmtMean"
+        label="评论平均数"
         v-if="checkedKeys.includes('address')"
+        show-overflow-tooltip
       >
       </el-table-column>
       <el-table-column
+        width="100"
         align="center"
-        prop="video_cpe"
-        label="视频cpe报备/非报备"
+        prop="viewMid"
+        label="阅读中位数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="likeMid"
+        label="点赞中位数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="collectMid"
+        label="收藏中位数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column
+        width="100"
+        align="center"
+        prop="cmtMid"
+        label="评论中位数"
         v-if="checkedKeys.includes('address')"
+        show-overflow-tooltip
       >
       </el-table-column>
       <el-table-column
+        width="100"
         align="center"
-        prop="article_cpm"
-        label="图文cpm报备/非报备"
-        v-if="checkedKeys.includes('address')"
+        prop="video_complete_rate"
+        label="视频完播率"
+        show-overflow-tooltip
       >
+      </el-table-column>
+
+      <el-table-column
+        align="center"
+        prop="last_at"
+        width="100"
+        label="最新报价时间"
+      >
+      </el-table-column>
+      <el-table-column align="center" prop="beizhu" label="其余备注">
+      </el-table-column>
+
+      <el-table-column align="center" prop="bb_p_cpe" label="图文cpe报备">
+      </el-table-column>
+      <el-table-column align="center" prop="not_bb_p_cpe" label="图文cpe非报备">
+      </el-table-column>
+      <el-table-column align="center" prop="bb_v_cpe" label="视频cpe报备">
+      </el-table-column>
+      <el-table-column align="center" prop="not_bb_v_cpe" label="视频cpe非报备">
+      </el-table-column>
+      <el-table-column align="center" prop="bb_p_cpm" label="图文cpm报备">
+      </el-table-column>
+      <el-table-column align="center" prop="not_bb_p_cpm" label="图文cpm非报备">
+      </el-table-column>
+      <el-table-column align="center" prop="bb_v_cpm" label="视频cpm报备">
+      </el-table-column>
+      <el-table-column align="center" prop="not_bb_v_cpm" label="视频cpm非报备">
+      </el-table-column>
+      <el-table-column align="center" prop="last_location" label="最近ip地址">
+      </el-table-column>
+      <el-table-column align="center" prop="location" label="常驻地">
       </el-table-column>
       <el-table-column
         align="center"
-        prop="video_cpm"
-        label="视频cpm报备/非报备"
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="ip_site" label="最近ip地址">
-      </el-table-column>
-      <el-table-column align="center" prop="often_site" label="常驻地">
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="fans_gender"
+        prop="fans_sex"
         width="200"
         show-overflow-tooltip
         label="粉丝性别分布"
@@ -825,7 +1142,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        prop="fans_cities"
+        prop="fans_areas"
         width="200"
         show-overflow-tooltip
         label="粉丝地域分布"
@@ -840,28 +1157,25 @@
       >
       </el-table-column>
       <el-table-column align="center" prop="is_mcn" label="签约mcn">
+        <template slot-scope="{ row }">
+          <div>
+            {{ row.is_mcn == 1 ? "是" : "否" }}
+          </div>
+        </template>
       </el-table-column>
       <el-table-column align="center" prop="mcn_name" label="mcn名称">
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="is_official_accounts"
-        label="关注17.5公众号"
-      >
+      <el-table-column align="center" label="关注17.5公众号">
+        <template slot-scope="{ row }">
+          <div>
+            {{ row.uid > 0 ? "是" : "否" }}
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="is_mini"
-        label="注册17.5小程序"
-        v-if="checkedKeys.includes('address')"
-      >
+      <!-- 注册17.5小程序和添加企业微信暂时没有字段  没有添加的 -->
+      <el-table-column align="center" prop="" label="注册17.5小程序">
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="is_enterprise_mini"
-        label="添加企业微信"
-        v-if="checkedKeys.includes('address')"
-      >
+      <el-table-column align="center" prop="" label="添加企业微信">
       </el-table-column>
       <el-table-column
         align="center"
@@ -869,6 +1183,19 @@
         label="来源"
         v-if="checkedKeys.includes('address')"
       >
+        <template slot-scope="{ row }">
+          <div>
+            {{
+              row.source == 1
+                ? "公众号录入"
+                : row.source == 2
+                ? "莓果库"
+                : row.source == 3
+                ? "资源库"
+                : "--"
+            }}
+          </div>
+        </template>
       </el-table-column>
     </el-table>
     <pagination
@@ -882,7 +1209,7 @@
 </template>
 
 <script>
-import { searchData } from "@/api/resourceInte";
+import { searchData, editTable } from "@/api/resourceInte";
 import Pagination from "@/components/pagination";
 import { uploadElExcel } from "@/utils/util";
 import { regionData, CodeToText } from "element-china-area-data";
@@ -905,6 +1232,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       currentPage: 1, //当前页数
       pageSize: 10, //每页显示条数
       total: 10, //总条数
@@ -919,19 +1247,42 @@ export default {
         showbabypop: false,
         showskinpop: false,
         showbloggerpop: false,
+        showskinSensitive: false, //是否敏感肌
+        showskinColor: false, //肤色
+        showskinSpecialty: false,
       },
       /* 表单修改领域提交的数据 */
       editDomain: {
         selectedEditDomain: [], //领域
       },
+
+      /* 修改返点 */
+      editRebateInp: "",
+      /* 修改视频非报备合集报价 */
+      editVideoCollectPriceInp: "",
+      /* 修改视频非报备报价 */
+      editVideoPriceInp: "",
+      /* 修改视频报备报价 */
+      editBbvpriceInp: "",
+      /* 修改图文非报备报价合集  */
+      editArticleCollectPriceInp: "",
+      /* 修改图文非报备报价 */
+      editArticlePriceInp: "",
+      /* 修改图文报备报价 */
+      editBbppriceInp: "",
       //表单修改账号人设的数据
       editAccountSetting: [],
       //表单内容形式
       editContentForm: [],
       searchForm: {
+        skinSensitive: null, //是否敏感肌
+        skinColor: null, //肤色
+        skinSpecialty: null, //皮肤特质
+        is_contact: false, //是否有联系方式
+        is_jianlian: false, //是否建联
         accurateCheckList: [], //精准匹配
-        assistSearch: "", //辅助搜索内容
-        contact: "", //联系方式
+        assistSearch: null, //辅助搜索内容
+        contact: null, //联系方式
         selectResidentArea: "", //选中常驻地址
         residentArea: [], //常驻地址代号
         selectIpArea: "", //选中的ip地址
@@ -941,55 +1292,47 @@ export default {
         selectedDomain: [], //领域
         selectedAccount: [], //账号人设
         selectedContentForm: [], //内容形式
-        fanNUm1: "", //粉丝量最低
-        fanNum2: "", //粉丝量最高
+        fanNUm1: null, //粉丝量最低
+        fanNUm2: null, //粉丝量最高
         /* 互动数据 */
         interact: [
           {
-            type: "",
-            num1: "",
-            num2: "",
+            field: "",
+            min: "",
+            max: "",
           },
         ],
         /* 报价数据 */
         offerData: [
           {
-            type: "",
-            num1: "",
-            num2: "",
+            field: "",
+            min: "",
+            max: "",
           },
         ],
         /* 年龄数据 */
         agedistribute: [
           {
-            type: "",
-            num1: "",
-            num2: "",
-          },
-        ],
-        /* 宝宝信息 */
-        babydistribute: [
-          {
-            type: "",
-            num1: "",
-            num2: "",
+            field: "",
+            min: "",
+            max: "",
           },
         ],
         /* 性别占比男 */
         man: {
-          num1: "",
-          num2: "",
+          num1: null,
+          num2: null,
         },
         /* 性别占比女 */
         woman: {
-          num1: "",
-          num2: "",
+          num1: null,
+          num2: null,
         },
         /* 宝宝data */
         babyData: {
-          sex: "",
-          num1: "",
-          num2: "",
+          field: "",
+          min: "",
+          max: "",
         },
       },
       /* 平台选择 */
@@ -1009,11 +1352,11 @@ export default {
       /* 宝宝信息的性别选择 */
       sexOptions: [
         {
-          value: "1",
+          value: "男",
           label: "男性",
         },
         {
-          value: "2",
+          value: "女",
           label: "女性",
         },
       ],
@@ -1044,120 +1387,7 @@ export default {
           address: "上海市普陀区金沙江路 1516 弄",
         },
       ],
-      expertTable: [
-        {
-          editContentFormShow: false, //修改内容形式
-          editAccountSetShow: false, //修改账号人设
-          editPopDomainShow: false, //修改领域弹框显示
-          //上面需要进行额外追加
-          avatar_url:
-            "https://sns-avatar-qc.xhscdn.com/avatar/62559031ddc2ed5650c711cc.jpg?imageView2/2/w/360/format/webp", //头像
-          nickname: "霹雳小阿姨", //昵称
-          type: "1", //1、小红书 2、抖音 3、微博 4、淘宝逛逛
-          id: 8403, //平台id
-          link: "https://www.xiaohongshu.com/user/profile/5e91ce650000000001007ee6", //主页链接
-          sex: "1", //性别 1、男  2、女
-          tags: "美妆博主", //领域
-          accountSetting: "账号人设", //账号人设
-          contentForm: "内容形式", //内容形式
-          isDip: "1", //是否可探店
-          babyDes: "宝宝信息", //宝宝信息
-          skin: "皮肤方面", //皮肤特质
-          nearNoteDate: "2021-10-9", //最近笔记时间
-          fans: "999", //粉丝数
-          liked: "999", //点赞数
-          collected: "999", //收藏数
-          follows: "999", //关注数
-          likeMean: "999", //8篇点赞平均数
-          collectMean: "999", //8篇收藏平均数
-          cmtMean: "999", //8篇评论平均数
-          likeMid: "999", //8篇点赞中位数
-          collectMid: "999", //8篇收藏中位数
-          cmtMid: "999", //8篇评论中位数
-          videoPlay: "50%", //视频完播率
-          article_report_price: "9.99", //图文报备报价
-          article_noreport_price: "9.99", //图文非报备报价
-          article_collect_price: "9.99", //图文合集报价
-          video_report_price: "9.99", //视频报备报价
-          video_noreport_price: "9.99", //视频非报备报价
-          video_collect_price: "9.99", //视频合集报价
-          rebate: "9.99", //返点
-          new_price_date: "2022-10", //最新报价时间
-          otherRemark: "其余备注", //其余备注
-          wechat_code: "18736110883", //微信号
-          phone: "18736110883", //手机号
-          article_cpe: "99", //图文cpe
-          video_cpe: "99", //视频cpe
-          article_cpm: "99", //图文cpm
-          video_cpm: "99", //视频cpm
-          ip_site: "北京市-北京区", //ip地址
-          often_site: "北京市-北京区", //常驻地
-          fans_gender: "粉丝性别分布", //粉丝性别分布
-          fans_cities: "粉丝地域分布", //粉丝地域分布
-          fans_ages: "粉丝年龄占比", //粉丝年龄占比
-          is_mcn: "1", //签约mcn
-          mcn_name: "mcn名称", //mcn名称
-          is_official_accounts: "关注17.5公众号", //关注17.5公众号
-          is_mini: "关注17.5小程序", //关注17.5小程序
-          is_enterprise_mini: "添加企业微信", //添加企业微信
-          source: "1", //来源：1 公众号录入 2莓果库 3资源库
-        },
-        {
-          editAccountSetShow: false, //修改账号人设
-          editPopDomainShow: false, //修改领域弹框显示
-          id: 8403,
-          userid: "5e91ce650000000001007ee6",
-          red_id: "99080417L",
-          tags: "美妆博主;",
-          images:
-            "https://sns-avatar-qc.xhscdn.com/avatar/62559031ddc2ed5650c711cc.jpg?imageView2/2/w/360/format/webp",
-          collected: 44948,
-          desc: "美妆护肤🧏🏻\u200d♀️\n好物分享🎁\n生活居家🏡\n📮939958538@qq.com",
-          fans: 14725,
-          follows: 569,
-          gender: "女",
-          level: "金冠薯",
-          liked: 93841,
-          location: "",
-          nickname: "霹雳小阿姨",
-          share_link:
-            "https://www.xiaohongshu.com/user/profile/5e91ce650000000001007ee6",
-          note_num_stat_posted: 51,
-          note_num_stat_liked: 93841,
-          note_num_stat_collected: 44948,
-          identity_deeplink:
-            "xhsdiscover://rn/app-settings/official/certification/details?type=2&user_id=5e91ce650000000001007ee6&is_mcn=false",
-          ip_location: "湖北",
-          brand_account_info: "",
-          red_official_verify_content: "",
-          status: null,
-          phone: "",
-          email: "939958538@qq.com、",
-          vx: "",
-          likeMean: 4,
-          collectMean: 1,
-          cmtMean: 117,
-          hudongMean: 122,
-          likeMid: 4,
-          collectMid: 1,
-          cmtMid: 117,
-          hudongMid: 122,
-          interaction: 138789,
-          readMid: 1069,
-          readMean: 1069,
-          fans_cities:
-            "北京: 3.0%,广州: 2.1%,深圳: 2.0%,上海: 1.9%,重庆: 1.8%,武汉: 1.4%,天津: 1.4%,青岛: 1.3%,保定: 1.3%",
-          fans_gender: "female: 90.2%,male: 9.8%",
-          fans_ages:
-            "<18: 42.5%,18-24: 20.9%,35-44: 15.9%,25-34: 12.2%,>44: 8.5%",
-          fansIncreaseNum: -37,
-          videoFullViewRate: "0.0",
-          vg_article_price: 150,
-          vg_video_price: 300,
-          vg_phone: "19921279585",
-          vg_wechat_code: "19921279585",
-        },
-      ],
+      expertTable: [],
       checkedKeys: ["date", "name", "address"], //选中的树结构
       treeData: [
         {
@@ -1181,24 +1411,108 @@ export default {
   },
   watch: {
     expertTable: {
-      handler(newVal, oldVal) {
-        console.log(newVal, oldVal);
+      handler() {
         this.editDomainAllSelect = [];
         this.editDomain.selectedEditDomain = [];
         this.editAccountSetting = [];
         this.editContentForm = [];
+        this.editBbppriceInp = [];
+        this.editArticlePriceInp = [];
+        this.editArticleCollectPriceInp = [];
+        this.editBbvpriceInp = [];
+        this.editVideoPriceInp = [];
+        this.editVideoCollectPriceInp = [];
+        this.editRebateInp = [];
       },
       deep: true,
     },
   },
-  mounted() {},
+  mounted() {
+    this.searchBtn();
+  },
 
   methods: {
     accurateCheckEvent(value) {
       console.log(value);
     },
+    /* 修改领域 */
+    editTablePop(trIndex, id, type) {
+      let newSelectedDomain = this.editDomain.selectedEditDomain.map((item) => {
+        /* 这一步是因为这里是对象数组避免修改原数组  回显的时候需要做出额外拼接 */
+        let obj = { ...item };
+        if (obj.ppid && obj.ppid.length > 0) {
+          obj.ppid = obj.ppid.map((item2) => {
+            if (item2.includes("其他")) {
+              item2 = "其他";
+            }
+            return item2;
+          });
+        }
+        return obj;
+      });
+      let obj = {
+        id,
+      };
+      //type 1为修改领域 2为账号人设 3为内容形式
+      switch (type) {
+        case 1:
+          obj.domain = newSelectedDomain;
+          break;
+        case 2:
+          obj.persona = this.editAccountSetting;
+          break;
+        case 3:
+          obj.content_type = this.editContentForm;
+          break;
+        case 4:
+          obj.bbpprice = this.editBbppriceInp;
+          break;
+        case 5:
+          obj.article_price = this.editArticlePriceInp;
+          break;
+        case 6:
+          obj.article_collect_price = this.editArticleCollectPriceInp;
+          break;
+        case 7:
+          obj.bbvprice = this.editBbvpriceInp;
+          break;
+        case 8:
+          obj.video_price = this.editVideoPriceInp;
+          break;
+        case 9:
+          obj.video_collect_price = this.editVideoCollectPriceInp;
+          break;
+        case 10:
+          obj.rebate = this.editRebateInp;
+          break;
+      }
+
+      editTable(obj)
+        .then((res) => {
+          if (res.code == 200) {
+            this.expertTable[trIndex].editContentFormShow = false;
+            this.expertTable[trIndex].editAccountSetShow = false;
+            this.expertTable[trIndex].editPopDomainShow = false;
+            this.expertTable[trIndex].editBbppriceShow = false;
+            this.expertTable[trIndex].editArticlePriceShow = false;
+            this.expertTable[trIndex].editArticleCollectPriceShow = false;
+            this.expertTable[trIndex].editBbvpriceShow = false;
+            this.expertTable[trIndex].editVideoPriceShow = false;
+            this.expertTable[trIndex].editVideoCollectPriceShow = false;
+            this.expertTable[trIndex].editRebateShow = false;
+            this.searchBtn();
+          } else {
+            this.$message.error(res.message);
+            console.error(res.msg);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err);
+          console.error(err);
+        });
+    },
     /* 表格中修改数据 */
-    editTablePop(trIndex) {
+    editTablePop1(trIndex) {
       console.log("trIndex: ", trIndex);
       /* 修改提交领域数据  区分其他 */
       let newSelectedDomain = this.editDomain.selectedEditDomain.map((item) => {
@@ -1421,12 +1735,37 @@ export default {
         showbabypop: false,
         showskinpop: false,
         showbloggerpop: false,
+        showskinSensitive: false,
+        showskinColor: false,
+        showskinSpecialty: false,
       };
     },
     /* 格式化提交数据 */
     subFormatData() {
-      let {accurateCheckList} = this.searchForm
+      let {
+        selectedPlatform, //平台
+        selectedAccount, //账号人设
+        selectedContentForm, //内容形式
+        fanNUm1, //粉丝量最低
+        fanNUm2, //粉丝量最大
+        interact, //互动数据
+        offerData, //报价
+        man, //性别男性占比
+        woman, //性别女性占比
+        agedistribute, //年龄段分布
+        babyData, //宝宝信息
+        is_contact, //是否有联系方式
+        is_jianlian, //是都建联
+        assistSearch, //辅助搜索
+        accurateCheckList, //精准匹配
+        selectResidentArea, //常驻地址
+        selectIpArea, //ip地址
+        skinSensitive, //是否敏感肌
+        skinColor, //肤色
+        skinSpecialty, //皮肤特质
+      } = this.searchForm;
       let obj = {};
+
       /* 修改提交领域数据  区分其他 */
       let newSelectedDomain = this.searchForm.selectedDomain.map((item) => {
         /* 这一步是因为这里是对象数组避免修改原数组  回显的时候需要做出额外拼接 */
@@ -1442,17 +1781,108 @@ export default {
         return obj;
       });
 
-      obj.newSelectedDomain = newSelectedDomain;
-      console.log(accurateCheckList);
-      console.log('obj: ', obj);
+      if (accurateCheckList.length == 2) {
+        obj.leimu = {
+          level_1: accurateCheckList[0],
+          level_2: accurateCheckList[1],
+        };
+      } else if (accurateCheckList.length == 3) {
+        obj.leimu = {
+          level_1: accurateCheckList[0],
+          level_2: accurateCheckList[1],
+          level_3: accurateCheckList[2],
+        };
+      } else {
+        obj.leimu = null;
+      }
+      obj.pageSize = this.pageSize;
+      obj.page = this.currentPage;
+
+      if (selectIpArea.length > 0) {
+        obj.last_location = {
+          level_1: selectIpArea[0],
+          level_2: selectIpArea[1],
+          level_3: selectIpArea[2],
+        };
+      } else {
+        obj.last_location = null;
+      }
+      if (selectResidentArea.length > 0) {
+        obj.location = {
+          level_1: selectResidentArea[0],
+          level_2: selectResidentArea[1],
+          level_3: selectResidentArea[2],
+        };
+      } else {
+        obj.location = null;
+      }
+
+      /* interact = interact.filter((res) => {
+        return res.field && res.min && res.max;
+      });
+      console.log('interact: ', interact); */
+      obj.skin_color = skinColor;
+      obj.skin_type = skinSpecialty;
+      obj.is_sensitive = skinSensitive;
+      obj.type = selectedPlatform;
+      obj.domain = newSelectedDomain;
+      obj.persona = selectedAccount;
+      obj.content_type = selectedContentForm;
+      obj.fans_min = fanNUm1;
+      obj.fans_max = fanNUm2;
+      obj.data_type = interact;
+      obj.price_type = offerData;
+      obj.sex_m_min = man.num1;
+      obj.sex_m_max = man.num2;
+      obj.sex_w_min = woman.num1;
+      obj.sex_w_max = woman.num2;
+      obj.fans_age = agedistribute;
+      obj.baby_info = [babyData];
+      obj.is_contact = is_contact ? "1" : null;
+      obj.is_jianlian = is_jianlian ? "1" : null;
+      obj.keyword = assistSearch;
+      console.log("obj: ", obj);
       return obj;
     },
     /* 搜索数据 */
     searchBtn() {
-      this.subFormatData();
-      searchData().then((res) => {
-        console.log(res);
-      });
+      let obj = this.subFormatData();
+      /* obj = {
+        type: [2],
+      }; */
+      this.isLoading = true;
+      searchData(obj)
+        .then((res) => {
+          if (res.code == 200) {
+            let { data, current_page, total } = res.data;
+            this.isLoading = false;
+            this.currentPage = current_page;
+            this.total = total;
+            data.map((res) => {
+              res.editContentFormShow = false;
+              res.editAccountSetShow = false;
+              res.editPopDomainShow = false;
+              res.editBbppriceShow = false;
+              res.editArticlePriceShow = false;
+              res.editArticleCollectPriceShow = false;
+              res.editBbvpriceShow = false;
+              res.editVideoPriceShow = false;
+              res.editVideoCollectPriceShow = false;
+              res.editRebateShow = false;
+
+              return res;
+            });
+            console.log("data: ", data);
+            this.expertTable = data;
+            console.log(this.tableData);
+          } else {
+            this.isLoading = false;
+            console.error(res.msg);
+          }
+        })
+        .catch(() => {
+          this.isLoading = false;
+        });
     },
     /* 清空数据 */
     resetData() {
@@ -1477,67 +1907,64 @@ export default {
       //表单内容形式
       this.editContentForm = [];
       this.searchForm = {
+        skinSensitive: null, //是否敏感肌
+        skinColor: null, //肤色
+        skinSpecialty: null, //皮肤特质
+        is_contact: false, //是否有联系方式
+        is_jianlian: false, //是否建联
         accurateCheckList: [], //精准匹配
-        assistSearch: "", //辅助搜索内容
-        contact: "", //联系方式
-        selectResidentArea: "", //选中常驻地址
+        assistSearch: null, //辅助搜索内容
+        contact: null, //联系方式
+        selectResidentArea: null, //选中常驻地址
         residentArea: [], //常驻地址代号
-        selectIpArea: "", //选中的ip地址
+        selectIpArea: null, //选中的ip地址
         ipArea: [], //ip地址代号
         skinData: [], //皮肤数据
         selectedPlatform: [],
         selectedDomain: [], //领域
         selectedAccount: [], //账号人设
         selectedContentForm: [], //内容形式
-        fanNUm1: "", //粉丝量最低
-        fanNum2: "", //粉丝量最高
+        fanNUm1: null, //粉丝量最低
+        fanNUm2: null, //粉丝量最高
         /* 互动数据 */
         interact: [
           {
-            type: "",
-            num1: "",
-            num2: "",
+            field: "",
+            min: "",
+            max: "",
           },
         ],
         /* 报价数据 */
         offerData: [
           {
-            type: "",
-            num1: "",
-            num2: "",
+            field: "",
+            min: "",
+            max: "",
           },
         ],
         /* 年龄数据 */
         agedistribute: [
           {
-            type: "",
-            num1: "",
-            num2: "",
-          },
-        ],
-        /* 宝宝信息 */
-        babydistribute: [
-          {
-            type: "",
-            num1: "",
-            num2: "",
+            field: "",
+            min: "",
+            max: "",
           },
         ],
         /* 性别占比男 */
         man: {
-          num1: "",
-          num2: "",
+          num1: null,
+          num2: null,
         },
         /* 性别占比女 */
         woman: {
-          num1: "",
-          num2: "",
+          num1: null,
+          num2: null,
         },
         /* 宝宝data */
         babyData: {
-          sex: "",
-          num1: "",
-          num2: "",
+          field: "",
+          min: "",
+          max: "",
         },
       };
     },
@@ -1555,9 +1982,9 @@ export default {
       this.searchForm.selectIpArea = loc;
     },
     residentChange() {
-      var loc = "";
+      var loc = [];
       for (let i = 0; i < this.searchForm.residentArea.length; i++) {
-        loc += CodeToText[this.searchForm.residentArea[i]];
+        loc.push(CodeToText[this.searchForm.residentArea[i]]);
       }
       console.log(this.searchForm.residentArea);
       this.searchForm.selectResidentArea = loc;
@@ -1567,24 +1994,17 @@ export default {
     },
     addInteract(type) {
       /* type 1是互动数据 2是报价 */
+      let obj = {
+        field: "",
+        min: "",
+        max: "",
+      };
       if (type == 1) {
-        this.searchForm.interact.push({
-          type: "",
-          num1: "",
-          num2: "",
-        });
+        this.searchForm.interact.push(obj);
       } else if (type == 2) {
-        this.searchForm.offerData.push({
-          type: "",
-          num1: "",
-          num2: "",
-        });
+        this.searchForm.offerData.push(obj);
       } else if (type == 3) {
-        this.searchForm.agedistribute.push({
-          type: "",
-          num1: "",
-          num2: "",
-        });
+        this.searchForm.agedistribute.push(obj);
       }
     },
   },
@@ -1592,6 +2012,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tips {
+  display: inline-block;
+  font-size: 15px;
+  line-height: 30px;
+  padding-left: 20px;
+  border: 1px solid #f7f7f7;
+  font-weight: bold;
+  .el-icon-warning-outline {
+    margin-right: 5px;
+  }
+}
 .interactpop_content {
   .add_item {
     width: 100%;

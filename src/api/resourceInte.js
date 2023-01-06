@@ -5,9 +5,20 @@ import service from '@/utils/serves'
 export function searchData(data) {
   return service({
     method: 'post',
-    url: '/user@login',
+    url: '/KocPool@list',
     data:{
-      api: 'user@login',
+      api: 'KocPool@list',
+      data
+    }
+  })
+}
+/* 修改领域请求 */
+export function editTable(data) {
+  return service({
+    method: 'post',
+    url: '/KocPool@edit',
+    data:{
+      api: 'KocPool@edit',
       data
     }
   })
