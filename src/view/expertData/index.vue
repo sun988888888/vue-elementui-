@@ -1886,9 +1886,12 @@ export default {
     },
     /* 清空数据 */
     resetData() {
-      this.domainAllSelect = []; //筛选领域回显
-      this.editDomainAllSelect = []; //修改领域
-      this.popShow = {
+       this.currentPage= 1, //当前页数
+      this.pageSize= 10, //每页显示条数
+      this.total= 10, //总条数
+      this.domainAllSelect= [], //筛选领域回显
+      this.editDomainAllSelect= [], //修改领域
+      this.popShow= {
         showfanpop: false,
         showinteractpop: false,
         showofferpop: false,
@@ -1897,16 +1900,34 @@ export default {
         showbabypop: false,
         showskinpop: false,
         showbloggerpop: false,
-      };
+        showskinSensitive: false, //是否敏感肌
+        showskinColor: false, //肤色
+        showskinSpecialty: false,
+      },
       /* 表单修改领域提交的数据 */
-      (this.editDomain = {
+      this.editDomain = {
         selectedEditDomain: [], //领域
-      }),
-        //表单修改账号人设的数据
-        (this.editAccountSetting = []);
+      },
+
+      /* 修改返点 */
+      this.editRebateInp="",
+      /* 修改视频非报备合集报价 */
+      this.editVideoCollectPriceInp="",
+      /* 修改视频非报备报价 */
+      this.editVideoPriceInp="",
+      /* 修改视频报备报价 */
+      this.editBbvpriceInp="",
+      /* 修改图文非报备报价合集  */
+      this.editArticleCollectPriceInp="",
+      /* 修改图文非报备报价 */
+      this.editArticlePriceInp="",
+      /* 修改图文报备报价 */
+      this.editBbppriceInp="",
+      //表单修改账号人设的数据
+      this.editAccountSetting=[],
       //表单内容形式
-      this.editContentForm = [];
-      this.searchForm = {
+      this.editContentForm=[],
+      this.searchForm={
         skinSensitive: null, //是否敏感肌
         skinColor: null, //肤色
         skinSpecialty: null, //皮肤特质
@@ -1915,9 +1936,9 @@ export default {
         accurateCheckList: [], //精准匹配
         assistSearch: null, //辅助搜索内容
         contact: null, //联系方式
-        selectResidentArea: null, //选中常驻地址
+        selectResidentArea: "", //选中常驻地址
         residentArea: [], //常驻地址代号
-        selectIpArea: null, //选中的ip地址
+        selectIpArea: "", //选中的ip地址
         ipArea: [], //ip地址代号
         skinData: [], //皮肤数据
         selectedPlatform: [],
@@ -1966,7 +1987,7 @@ export default {
           min: "",
           max: "",
         },
-      };
+      }
     },
     /* 
       //区域码转汉字
