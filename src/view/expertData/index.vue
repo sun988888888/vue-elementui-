@@ -334,8 +334,6 @@
               <el-radio label="白色">白色</el-radio>
               <el-radio label="黄色">黄色</el-radio>
               <el-radio label="黑色">黑色</el-radio>
-              <el-radio label="黄黑皮">黄黑皮</el-radio>
-              <el-radio label="橄榄皮">橄榄皮</el-radio>
               <el-radio label="null">未选择</el-radio>
             </el-radio-group>
             <div class="inp_wrap_btn" @click="selectBtn">确定</div>
@@ -429,26 +427,28 @@
             <div class="inp_wrap">
               <div class="inp_wrap_label flex_label">最近ip</div>
               <div>
-                <el-cascader
+                <input type="text" v-model="searchForm.selectIpArea" />
+                <!-- <el-cascader
                   size="mini"
                   :options="areaOptions"
                   v-model="searchForm.ipArea"
                   @change="ipChange"
                 >
-                </el-cascader>
+                </el-cascader> -->
               </div>
             </div>
             <div class="inp_wrap" style="margin-top: 10px">
               <div class="inp_wrap_label flex_label">常驻地址</div>
               <div>
-                <el-cascader
+                <input type="text" v-model="searchForm.selectResidentArea" />
+                <!-- <el-cascader
                   size="mini"
                   :options="areaOptions"
                   :props="{ checkStrictly: true }"
                   v-model="searchForm.residentArea"
                   @change="residentChange"
                 >
-                </el-cascader>
+                </el-cascader> -->
               </div>
             </div>
             <div class="inp_wrap_btn" @click="selectBtn">确定</div>
@@ -1010,11 +1010,11 @@
         width="100"
         show-overflow-tooltip
       >
-      <template slot-scope="scope">
-        <div>
-          {{scope.row.is_sensitive==1?'是':'否'}}
-      </div>
-      </template>
+        <template slot-scope="scope">
+          <div>
+            {{ scope.row.is_sensitive == 1 ? "是" : "否" }}
+          </div>
+        </template>
       </el-table-column>
       <el-table-column
         width="100"
@@ -1031,7 +1031,7 @@
         show-overflow-tooltip
       >
       </el-table-column>
-      <el-table-column align="center" prop="liked" label="赞藏数">
+      <el-table-column align="center" prop="interaction" label="赞藏数">
       </el-table-column>
 
       <el-table-column
@@ -1282,17 +1282,17 @@ export default {
       //表单内容形式
       editContentForm: [],
       searchForm: {
-        skinSensitive: 'null', //是否敏感肌
-        skinColor: 'null', //肤色
-        skinSpecialty: 'null', //皮肤特质
+        skinSensitive: "null", //是否敏感肌
+        skinColor: "null", //肤色
+        skinSpecialty: "null", //皮肤特质
         is_contact: false, //是否有联系方式
         is_jianlian: false, //是否建联
         accurateCheckList: [], //精准匹配
         assistSearch: null, //辅助搜索内容
         contact: null, //联系方式
-        selectResidentArea: "", //选中常驻地址
+        selectResidentArea: null, //选中常驻地址
         residentArea: [], //常驻地址代号
-        selectIpArea: "", //选中的ip地址
+        selectIpArea: null, //选中的ip地址
         ipArea: [], //ip地址代号
         skinData: [], //皮肤数据
         selectedPlatform: [],
@@ -1810,7 +1810,7 @@ export default {
       obj.pageSize = this.pageSize;
       obj.page = this.currentPage;
 
-      if (selectIpArea.length > 0) {
+      /* if (selectIpArea.length > 0) {
         obj.last_location = {
           level_1: selectIpArea[0],
           level_2: selectIpArea[1],
@@ -1827,7 +1827,9 @@ export default {
         };
       } else {
         obj.location = null;
-      }
+      } */
+      obj.last_location = selectIpArea == "" ? null : selectIpArea;
+      obj.location = selectResidentArea == "" ? null : selectResidentArea;
       /* interact = interact.filter((res) => {
         return res.field && res.min && res.max;
       });
@@ -1938,17 +1940,17 @@ export default {
         //表单内容形式
         (this.editContentForm = []),
         (this.searchForm = {
-          skinSensitive: 'null', //是否敏感肌
-          skinColor: 'null', //肤色
-          skinSpecialty: 'null', //皮肤特质
+          skinSensitive: "null", //是否敏感肌
+          skinColor: "null", //肤色
+          skinSpecialty: "null", //皮肤特质
           is_contact: false, //是否有联系方式
           is_jianlian: false, //是否建联
           accurateCheckList: [], //精准匹配
           assistSearch: null, //辅助搜索内容
           contact: null, //联系方式
-          selectResidentArea: "", //选中常驻地址
+          selectResidentArea: null, //选中常驻地址
           residentArea: [], //常驻地址代号
-          selectIpArea: "", //选中的ip地址
+          selectIpArea: null, //选中的ip地址
           ipArea: [], //ip地址代号
           skinData: [], //皮肤数据
           selectedPlatform: [],
