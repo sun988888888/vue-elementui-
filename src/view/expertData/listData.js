@@ -516,6 +516,11 @@ let ageOptions = [
 /* 导出表格表头 */
 let excelCommons = [
   {
+    title: "ID",
+    key: "id",
+    type: "text",
+  },
+  {
     title: "昵称",
     key: "nickname",
     type: "text",
@@ -556,123 +561,38 @@ let excelCommons = [
     type: "text",
   },
   {
-    title: "是否可探店",
-    key: "isDip",
-    type: "text",
-  },
-  {
-    title: "宝宝信息",
-    key: "babyDes",
-    type: "text",
-  },
-  {
-    title: "皮肤特质",
-    key: "skin",
-    type: "text",
-  },
-  {
-    title: "最近笔记时间",
-    key: "nearNoteDate",
-    type: "text",
-  },
-  {
-    title: "粉丝数",
-    key: "fans",
-    type: "text",
-  },
-  {
-    title: "点赞数",
-    key: "liked",
-    type: "text",
-  },
-  {
-    title: "收藏数",
-    key: "collected",
-    type: "text",
-  },
-  {
-    title: "关注数",
-    key: "follows",
-    type: "text",
-  },
-  {
-    title: "8篇点赞平均数",
-    key: "likeMean",
-    type: "text",
-  },
-  {
-    title: "8篇收藏平均数",
-    key: "collectMean",
-    type: "text",
-  },
-  {
-    title: "8篇评论平均数",
-    key: "cmtMean",
-    type: "text",
-  },
-  {
-    title: "8篇点赞中位数",
-    key: "likeMid",
-    type: "text",
-  },
-  {
-    title: "8篇收藏中位数",
-    key: "collectMid",
-    type: "text",
-  },
-  {
-    title: "8篇评论中位数",
-    key: "cmtMid",
-    type: "text",
-  },
-  {
-    title: "视频完播率",
-    key: "videoPlay",
-    type: "text",
-  },
-  {
     title: "图文报备报价",
-    key: "article_report_price",
+    key: "bbpprice",
     type: "text",
   },
   {
     title: "图文非报备报价",
-    key: "article_noreport_price",
+    key: "article_price",
     type: "text",
   },
   {
-    title: "图文合集报价",
+    title: "图文非报备合集报价",
     key: "article_collect_price",
     type: "text",
   },
   {
     title: "视频报备报价",
-    key: "video_report_price",
+    key: "bbvprice",
     type: "text",
   },
   {
     title: "视频非报备报价",
-    key: "video_noreport_price",
+    key: "video_price",
     type: "text",
   },
   {
-    title: "视频合集报价",
+    title: "视频非报备合集报价",
     key: "video_collect_price",
     type: "text",
   },
   {
     title: "返点",
     key: "rebate",
-    type: "text",
-  },
-  {
-    title: "最新报价时间",
-    key: "new_price_date",
-    type: "text",
-  },
-  {
-    title: "其余备注",
-    key: "otherRemark",
     type: "text",
   },
   {
@@ -686,43 +606,160 @@ let excelCommons = [
     type: "text",
   },
   {
-    title: "图文cpe",
-    key: "article_cpe",
+    title: "是否可探店",
+    key: "is_tandian",
     type: "text",
   },
   {
-    title: "视频cpe",
-    key: "video_cpe",
+    title: "宝宝信息",
+    key: "baby_info",
     type: "text",
   },
   {
-    title: "图文cpm",
-    key: "article_cpm",
+    title: "皮肤特质",
+    key: "skin_type",
     type: "text",
   },
   {
-    title: "视频cpm",
-    key: "video_cpm",
+    title: "肤色",
+    key: "skin_color",
     type: "text",
   },
   {
-    title: "ip地址",
-    key: "ip_site",
+    title: "敏感肌",
+    key: "is_sensitive",
+    type: "text",
+  },
+  {
+    title: "最近笔记时间",
+    key: "last_release_date",
+    type: "text",
+  },
+  {
+    title: "粉丝数",
+    key: "fans",
+    type: "text",
+  },
+  {
+    title: "赞藏数",
+    key: "interaction",
+    type: "text",
+  },
+  {
+    title: "阅读平均数",
+    key: "viewMean",
+    type: "text",
+  },
+  {
+    title: "点赞平均数",
+    key: "likeMean",
+    type: "text",
+  },
+  {
+    title: "收藏平均数",
+    key: "collectMean",
+    type: "text",
+  },
+  {
+    title: "评论平均数",
+    key: "cmtMean",
+    type: "text",
+  },
+  {
+    title: "阅读中位数",
+    key: "viewMid",
+    type: "text",
+  },
+  {
+    title: "点赞中位数",
+    key: "likeMid",
+    type: "text",
+  },
+  {
+    title: "收藏中位数",
+    key: "collectMid",
+    type: "text",
+  },
+  {
+    title: "评论中位数",
+    key: "cmtMid",
+    type: "text",
+  },
+  {
+    title: "视频完播率",
+    key: "video_complete_rate",
+    type: "text",
+  },
+  
+  {
+    title: "最新报价时间",
+    key: "last_at",
+    type: "text",
+  },
+  {
+    title: "其余备注",
+    key: "beizhu",
+    type: "text",
+  },
+
+  {
+    title: "图文cpe报备",
+    key: "bb_p_cpe",
+    type: "text",
+  },
+  {
+    title: "图文cpe非报备",
+    key: "not_bb_p_cpe",
+    type: "text",
+  },
+  {
+    title: "视频cpe报备",
+    key: "bb_v_cpe",
+    type: "text",
+  },
+  {
+    title: "视频cpe非报备",
+    key: "not_bb_v_cpe",
+    type: "text",
+  },
+  {
+    title: "图文cpm报备",
+    key: "bb_p_cpm",
+    type: "text",
+  },
+  {
+    title: "图文cpm非报备",
+    key: "not_bb_p_cpm",
+    type: "text",
+  },
+  {
+    title: "视频cpm报备",
+    key: "bb_v_cpm",
+    type: "text",
+  },
+  {
+    title: "视频cpm非报备",
+    key: "not_bb_v_cpm",
+    type: "text",
+  },
+  {
+    title: "最近ip地址",
+    key: "last_location",
     type: "text",
   },
   {
     title: "常驻地",
-    key: "often_site",
+    key: "location",
     type: "text",
   },
   {
     title: "粉丝性别分布",
-    key: "fans_gender",
+    key: "fans_sex",
     type: "text",
   },
   {
     title: "粉丝地域分布",
-    key: "fans_cities",
+    key: "fans_areas",
     type: "text",
   },
   {

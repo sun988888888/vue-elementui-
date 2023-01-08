@@ -334,7 +334,7 @@
               <el-radio label="白色">白皮</el-radio>
               <el-radio label="黄色">黄皮</el-radio>
               <el-radio label="黑色">黑皮</el-radio>
-               <el-radio label="黄黑皮">黄黑皮</el-radio>
+              <el-radio label="黄黑皮">黄黑皮</el-radio>
               <el-radio label="橄榄皮">橄榄皮</el-radio>
               <el-radio label="null">未选择</el-radio>
             </el-radio-group>
@@ -1212,6 +1212,7 @@
       :total="total"
       :page.sync="currentPage"
       :limit.sync="pageSize"
+      :pageSizes.sync="pageSizes"
       @pagination="searchBtn"
     />
   </div>
@@ -1241,6 +1242,7 @@ export default {
   },
   data() {
     return {
+      pageSizes: [10, 25, 50, 100, 200, 500, 1000],
       isLoading: false,
       currentPage: 1, //当前页数
       pageSize: 10, //每页显示条数
@@ -1725,10 +1727,43 @@ export default {
         };
         commons.push(obj);
       }); */
-
+      let excekData = this.expertTable.map((res) => {
+        let obj = { ...res };
+        Object.keys(obj).forEach((res2) => {
+          if (obj[res2] === null) {
+            obj[res2] = "";
+          }
+        });
+        obj.is_official_accounts = obj.uid > 0 ? "是" : "否";
+        obj.sex = obj.sex == 1 ? "男" : "女";
+        obj.is_tandian = obj.is_tandian == 1 ? "是" : "否";
+        obj.is_sensitive = obj.is_sensitive == 1 ? "是" : "否";
+        obj.is_mcn = obj.is_mcn == 1 ? "是" : "否" ;
+        obj.source =
+          obj.source == 1
+            ? "公众号录入"
+            : obj.source == 2
+            ? "莓果库"
+            : obj.source == 3
+            ? "资源库"
+            : "--";
+        obj.type =
+          obj.type == 1
+            ? "小红书"
+            : obj.type == 2
+            ? "抖音"
+            : obj.type == 3
+            ? "微博"
+            : obj.type == 4
+            ? "淘宝逛逛"
+            : "--";
+        obj.is_mini = "";
+        obj.is_enterprise_mini = "";
+        return obj;
+      });
       commons = excelCommons;
       /* 导出表格的时候对npm包做了修改进行实现兼容  部分commons是img类型但是是text空的情况 */
-      uploadElExcel(commons, this.expertTable);
+      uploadElExcel(commons, excekData);
     },
     /* 树结构 */
     selectTree(data, selectData) {
