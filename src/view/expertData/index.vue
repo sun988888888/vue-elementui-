@@ -331,9 +331,11 @@
         >
           <div class="interactpop_content pop_content">
             <el-radio-group v-model="searchForm.skinColor">
-              <el-radio label="白色">白色</el-radio>
-              <el-radio label="黄色">黄色</el-radio>
-              <el-radio label="黑色">黑色</el-radio>
+              <el-radio label="白色">白皮</el-radio>
+              <el-radio label="黄色">黄皮</el-radio>
+              <el-radio label="黑色">黑皮</el-radio>
+               <el-radio label="黄黑皮">黄黑皮</el-radio>
+              <el-radio label="橄榄皮">橄榄皮</el-radio>
               <el-radio label="null">未选择</el-radio>
             </el-radio-group>
             <div class="inp_wrap_btn" @click="selectBtn">确定</div>
