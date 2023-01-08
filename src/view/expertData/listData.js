@@ -410,15 +410,7 @@ let skinOptions = [
       {
         value: "黑皮",
         label: "黑皮",
-      },
-      {
-        value: "黄黑皮",
-        label: "黄黑皮",
-      },
-      {
-        value: "橄榄皮",
-        label: "橄榄皮",
-      },
+      }
     ],
   },
   {

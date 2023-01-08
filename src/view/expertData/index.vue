@@ -59,6 +59,7 @@
           popper-class="skin_pop_cascader"
           v-model="searchForm.accurateCheckList"
           placeholder="精准匹配"
+          :props="{ checkStrictly: true }"
           :options="accurateCheckData"
           @change="accurateCheckEvent"
         ></el-cascader>
@@ -443,6 +444,7 @@
                 <el-cascader
                   size="mini"
                   :options="areaOptions"
+                  :props="{ checkStrictly: true }"
                   v-model="searchForm.residentArea"
                   @change="residentChange"
                 >
@@ -1008,6 +1010,11 @@
         width="100"
         show-overflow-tooltip
       >
+      <template slot-scope="scope">
+        <div>
+          {{scope.row.is_sensitive==1?'是':'否'}}
+      </div>
+      </template>
       </el-table-column>
       <el-table-column
         width="100"
@@ -1275,9 +1282,9 @@ export default {
       //表单内容形式
       editContentForm: [],
       searchForm: {
-        skinSensitive: null, //是否敏感肌
-        skinColor: null, //肤色
-        skinSpecialty: null, //皮肤特质
+        skinSensitive: 'null', //是否敏感肌
+        skinColor: 'null', //肤色
+        skinSpecialty: 'null', //皮肤特质
         is_contact: false, //是否有联系方式
         is_jianlian: false, //是否建联
         accurateCheckList: [], //精准匹配
@@ -1780,8 +1787,11 @@ export default {
         }
         return obj;
       });
-
-      if (accurateCheckList.length == 2) {
+      if (accurateCheckList.length == 1) {
+        obj.leimu = {
+          level_1: accurateCheckList[0],
+        };
+      } else if (accurateCheckList.length == 2) {
         obj.leimu = {
           level_1: accurateCheckList[0],
           level_2: accurateCheckList[1],
@@ -1795,6 +1805,8 @@ export default {
       } else {
         obj.leimu = null;
       }
+      console.log("obj.leimu: ", obj.leimu);
+      console.log("accurateCheckList: ", accurateCheckList);
       obj.pageSize = this.pageSize;
       obj.page = this.currentPage;
 
@@ -1816,14 +1828,13 @@ export default {
       } else {
         obj.location = null;
       }
-
       /* interact = interact.filter((res) => {
         return res.field && res.min && res.max;
       });
       console.log('interact: ', interact); */
-      obj.skin_color = skinColor;
-      obj.skin_type = skinSpecialty;
-      obj.is_sensitive = skinSensitive;
+      obj.skin_color = skinColor == "null" ? null : skinColor;
+      obj.skin_type = skinSpecialty == "null" ? null : skinSpecialty;
+      obj.is_sensitive = skinSensitive == "null" ? null : skinSensitive;
       obj.type = selectedPlatform;
       obj.domain = newSelectedDomain;
       obj.persona = selectedAccount;
@@ -1886,108 +1897,107 @@ export default {
     },
     /* 清空数据 */
     resetData() {
-       this.currentPage= 1, //当前页数
-      this.pageSize= 10, //每页显示条数
-      this.total= 10, //总条数
-      this.domainAllSelect= [], //筛选领域回显
-      this.editDomainAllSelect= [], //修改领域
-      this.popShow= {
-        showfanpop: false,
-        showinteractpop: false,
-        showofferpop: false,
-        showagepop: false,
-        showsexpop: false,
-        showbabypop: false,
-        showskinpop: false,
-        showbloggerpop: false,
-        showskinSensitive: false, //是否敏感肌
-        showskinColor: false, //肤色
-        showskinSpecialty: false,
-      },
-      /* 表单修改领域提交的数据 */
-      this.editDomain = {
-        selectedEditDomain: [], //领域
-      },
-
-      /* 修改返点 */
-      this.editRebateInp="",
-      /* 修改视频非报备合集报价 */
-      this.editVideoCollectPriceInp="",
-      /* 修改视频非报备报价 */
-      this.editVideoPriceInp="",
-      /* 修改视频报备报价 */
-      this.editBbvpriceInp="",
-      /* 修改图文非报备报价合集  */
-      this.editArticleCollectPriceInp="",
-      /* 修改图文非报备报价 */
-      this.editArticlePriceInp="",
-      /* 修改图文报备报价 */
-      this.editBbppriceInp="",
-      //表单修改账号人设的数据
-      this.editAccountSetting=[],
-      //表单内容形式
-      this.editContentForm=[],
-      this.searchForm={
-        skinSensitive: null, //是否敏感肌
-        skinColor: null, //肤色
-        skinSpecialty: null, //皮肤特质
-        is_contact: false, //是否有联系方式
-        is_jianlian: false, //是否建联
-        accurateCheckList: [], //精准匹配
-        assistSearch: null, //辅助搜索内容
-        contact: null, //联系方式
-        selectResidentArea: "", //选中常驻地址
-        residentArea: [], //常驻地址代号
-        selectIpArea: "", //选中的ip地址
-        ipArea: [], //ip地址代号
-        skinData: [], //皮肤数据
-        selectedPlatform: [],
-        selectedDomain: [], //领域
-        selectedAccount: [], //账号人设
-        selectedContentForm: [], //内容形式
-        fanNUm1: null, //粉丝量最低
-        fanNUm2: null, //粉丝量最高
-        /* 互动数据 */
-        interact: [
-          {
+      (this.currentPage = 1), //当前页数
+        (this.pageSize = 10), //每页显示条数
+        (this.total = 10), //总条数
+        (this.domainAllSelect = []), //筛选领域回显
+        (this.editDomainAllSelect = []), //修改领域
+        (this.popShow = {
+          showfanpop: false,
+          showinteractpop: false,
+          showofferpop: false,
+          showagepop: false,
+          showsexpop: false,
+          showbabypop: false,
+          showskinpop: false,
+          showbloggerpop: false,
+          showskinSensitive: false, //是否敏感肌
+          showskinColor: false, //肤色
+          showskinSpecialty: false,
+        }),
+        /* 表单修改领域提交的数据 */
+        (this.editDomain = {
+          selectedEditDomain: [], //领域
+        }),
+        /* 修改返点 */
+        (this.editRebateInp = ""),
+        /* 修改视频非报备合集报价 */
+        (this.editVideoCollectPriceInp = ""),
+        /* 修改视频非报备报价 */
+        (this.editVideoPriceInp = ""),
+        /* 修改视频报备报价 */
+        (this.editBbvpriceInp = ""),
+        /* 修改图文非报备报价合集  */
+        (this.editArticleCollectPriceInp = ""),
+        /* 修改图文非报备报价 */
+        (this.editArticlePriceInp = ""),
+        /* 修改图文报备报价 */
+        (this.editBbppriceInp = ""),
+        //表单修改账号人设的数据
+        (this.editAccountSetting = []),
+        //表单内容形式
+        (this.editContentForm = []),
+        (this.searchForm = {
+          skinSensitive: 'null', //是否敏感肌
+          skinColor: 'null', //肤色
+          skinSpecialty: 'null', //皮肤特质
+          is_contact: false, //是否有联系方式
+          is_jianlian: false, //是否建联
+          accurateCheckList: [], //精准匹配
+          assistSearch: null, //辅助搜索内容
+          contact: null, //联系方式
+          selectResidentArea: "", //选中常驻地址
+          residentArea: [], //常驻地址代号
+          selectIpArea: "", //选中的ip地址
+          ipArea: [], //ip地址代号
+          skinData: [], //皮肤数据
+          selectedPlatform: [],
+          selectedDomain: [], //领域
+          selectedAccount: [], //账号人设
+          selectedContentForm: [], //内容形式
+          fanNUm1: null, //粉丝量最低
+          fanNUm2: null, //粉丝量最高
+          /* 互动数据 */
+          interact: [
+            {
+              field: "",
+              min: "",
+              max: "",
+            },
+          ],
+          /* 报价数据 */
+          offerData: [
+            {
+              field: "",
+              min: "",
+              max: "",
+            },
+          ],
+          /* 年龄数据 */
+          agedistribute: [
+            {
+              field: "",
+              min: "",
+              max: "",
+            },
+          ],
+          /* 性别占比男 */
+          man: {
+            num1: null,
+            num2: null,
+          },
+          /* 性别占比女 */
+          woman: {
+            num1: null,
+            num2: null,
+          },
+          /* 宝宝data */
+          babyData: {
             field: "",
             min: "",
             max: "",
           },
-        ],
-        /* 报价数据 */
-        offerData: [
-          {
-            field: "",
-            min: "",
-            max: "",
-          },
-        ],
-        /* 年龄数据 */
-        agedistribute: [
-          {
-            field: "",
-            min: "",
-            max: "",
-          },
-        ],
-        /* 性别占比男 */
-        man: {
-          num1: null,
-          num2: null,
-        },
-        /* 性别占比女 */
-        woman: {
-          num1: null,
-          num2: null,
-        },
-        /* 宝宝data */
-        babyData: {
-          field: "",
-          min: "",
-          max: "",
-        },
-      }
+        });
     },
     /* 
       //区域码转汉字
