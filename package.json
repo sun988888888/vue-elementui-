@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy:test": "cross-env gulp TEST_DEPLOY"
+    "deploy:test": "vue-cli-service build && cross-env gulp TEST_DEPLOY"
   },
   "dependencies": {
     "axios": "^1.2.1",
