@@ -439,6 +439,10 @@ let skinOptions = [
 /* 互动数据类型 */
 let interactOptions = [
   {
+    value: "interaction",
+    label: "总赞藏",
+  },
+  {
     value: "likeMid",
     label: "点赞中位数",
   },
