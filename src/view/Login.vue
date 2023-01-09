@@ -87,10 +87,13 @@ export default {
          /* 存储token */
          /* this.$store.dispatch('user/resetToken','11111') */
           login(this.loginForm).then((res) => {
-            let { code,data:{token,nickname} } = res;
+            let { code,data:{token,nickname,is_admin} } = res;
             if (code == 200) {
               setStorage("token",token);
               setStorage("username",nickname);
+              console.log(is_admin);
+              this.$store.commit('user/SET_IDENTITY', is_admin)
+              sessionStorage.setItem('is_admin',is_admin)
               this.$message({ message: res.msg, type: "success" });
               this.$router.replace("/layout");
             } else {

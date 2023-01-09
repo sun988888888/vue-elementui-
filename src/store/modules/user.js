@@ -5,12 +5,21 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  identity:''
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_IDENTITY: (state, value) => {
+    state.identity = value
+  },
+  RESET_STATE: (state, data) => {
+    console.log('data: ', data);
+    
+    state = data
   }
 }
 

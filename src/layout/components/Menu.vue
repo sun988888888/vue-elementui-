@@ -36,7 +36,11 @@
                 </el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item :index="item2.path + ''" :key="index2" v-else-if="!item2.hidden">
+            <el-menu-item
+              :index="item2.path + ''"
+              :key="index2"
+              v-else-if="!item2.hidden && item2.meta.role.includes(identity)!='-1'"
+            >
               <i :class="item2.iconClass"></i>
               {{ item2.name }}
             </el-menu-item>
@@ -54,10 +58,15 @@ export default {
   data() {
     return {
       menus: [],
+      identity: 0, //身份信息  1是管理员
     };
   },
   created() {
     this.menus = [...this.$router.options.routes];
+    /* this.identity = this.$store.state.user.identity; */
+    this.identity = sessionStorage.getItem('is_admin')
+    console.log('this.identity: ', this.identity);
+    console.log('this.identity: ', this.identity);
   },
   mounted() {},
   computed: {
@@ -82,11 +91,11 @@ export default {
         margin-right: 15px;
       }
     }
-     .el-menu-item {
+    .el-menu-item {
       /*.el-menu-item的最小宽度会影响二级菜单打开的时候会突出  */
       min-width: 0;
     }
-    .el-menu-item-group__title{
+    .el-menu-item-group__title {
       display: none;
     }
   }

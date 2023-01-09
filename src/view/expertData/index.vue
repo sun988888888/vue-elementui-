@@ -475,7 +475,7 @@
             class="assist_search_inp"
           ></el-input>
           <el-button @click="resetData">清空</el-button>
-          <el-button type="primary" @click="searchBtn">确定</el-button>
+          <el-button type="primary" @click="searchBtn(1)">确定</el-button>
           <el-button @click="uploadData" type="primary" icon="el-icon-download"
             >导出</el-button
           >
@@ -1220,6 +1220,7 @@
 
 <script>
 import { searchData, editTable } from "@/api/resourceInte";
+import {  dataPoint } from "@/api/dataPoint";
 import Pagination from "@/components/pagination";
 import { uploadElExcel } from "@/utils/util";
 import { regionData, CodeToText } from "element-china-area-data";
@@ -1710,6 +1711,7 @@ export default {
     },
     /* 前端导出表格 */
     uploadData() {
+      dataPoint({ event_id: "K0101", times: 1 });
       let commons = [];
       /*
     //可配合筛选进行筛选固定列进行导出  
@@ -1738,7 +1740,7 @@ export default {
         obj.sex = obj.sex == 1 ? "男" : "女";
         obj.is_tandian = obj.is_tandian == 1 ? "是" : "否";
         obj.is_sensitive = obj.is_sensitive == 1 ? "是" : "否";
-        obj.is_mcn = obj.is_mcn == 1 ? "是" : "否" ;
+        obj.is_mcn = obj.is_mcn == 1 ? "是" : "否";
         obj.source =
           obj.source == 1
             ? "公众号录入"
@@ -1895,7 +1897,14 @@ export default {
       return obj;
     },
     /* 搜索数据 */
-    searchBtn() {
+    searchBtn(type) {
+      if (type == 1) {
+        try {
+          dataPoint({ event_id: "K0100", times: 1 });
+        } catch (error) {
+          console.error(error);
+        }
+      }
       let obj = this.subFormatData();
       /* obj = {
         type: [2],

@@ -3,8 +3,8 @@ import App from './App.vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.min.css'
-
 import router from './router'
+/* import './dataBackVuex' */
 /* 挂载路由 */
 /* import axios from 'axios'
 Vue.prototype.axios=axios */
@@ -25,7 +25,6 @@ router.beforeEach((to,from,next)=>{
       next('/login')
     } next()
   } next()
-
 })
 
 new Vue({

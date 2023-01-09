@@ -10,7 +10,6 @@ export default {
     //在页面刷新时将vuex里的state信息保存到sessionStorage里
     window.addEventListener("beforeunload", () => {
       console.log("页面将要刷新了");
-      //let str = JSON.stringify(this.$store.state.tagsView.cachedViews);
       let arr = [];
       if (this.$store.state.tagsView.visitedViews.length > 0) {
         this.$store.state.tagsView.visitedViews.forEach((item) => {
