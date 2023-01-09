@@ -571,6 +571,15 @@
           }}</a>
         </template>
       </el-table-column>
+       <el-table-column
+        align="center"
+        prop="fans"
+        label="粉丝数"
+        show-overflow-tooltip
+      >
+      </el-table-column>
+      <el-table-column align="center" prop="interaction" label="赞藏数">
+      </el-table-column>
       <el-table-column align="center" prop="sex" width="100" label="性别">
         <template slot-scope="{ row }">
           <div>
@@ -1026,15 +1035,7 @@
         show-overflow-tooltip
       >
       </el-table-column>
-      <el-table-column
-        align="center"
-        prop="fans"
-        label="粉丝数"
-        show-overflow-tooltip
-      >
-      </el-table-column>
-      <el-table-column align="center" prop="interaction" label="赞藏数">
-      </el-table-column>
+     
 
       <el-table-column
         width="100"
