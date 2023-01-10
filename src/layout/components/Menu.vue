@@ -39,10 +39,10 @@
             <el-menu-item
               :index="item2.path + ''"
               :key="index2"
-              v-else-if="!item2.hidden && item2.meta.role.includes(identity)!='-1'"
+              v-else-if="!item2.hidden && item2.meta.role.includes(identity)"
             >
               <i :class="item2.iconClass"></i>
-              {{ item2.name }}
+              {{item2.name}}
             </el-menu-item>
           </template>
         </template>
@@ -63,10 +63,7 @@ export default {
   },
   created() {
     this.menus = [...this.$router.options.routes];
-    /* this.identity = this.$store.state.user.identity; */
-    this.identity = sessionStorage.getItem('is_admin')
-    console.log('this.identity: ', this.identity);
-    console.log('this.identity: ', this.identity);
+    this.identity = this.$store.state.user.identity;
   },
   mounted() {},
   computed: {

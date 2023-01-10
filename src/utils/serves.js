@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_API_BASE_URL,//baseurl会自动加在请求地址
-  timeout: 3000
+  timeout: 20000
 })
 
 /* 请求拦截 */

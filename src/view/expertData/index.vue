@@ -571,7 +571,7 @@
           }}</a>
         </template>
       </el-table-column>
-       <el-table-column
+      <el-table-column
         align="center"
         prop="fans"
         label="粉丝数"
@@ -1035,7 +1035,6 @@
         show-overflow-tooltip
       >
       </el-table-column>
-     
 
       <el-table-column
         width="100"
@@ -1221,7 +1220,7 @@
 
 <script>
 import { searchData, editTable } from "@/api/resourceInte";
-import {  dataPoint } from "@/api/dataPoint";
+import { dataPoint } from "@/api/dataPoint";
 import Pagination from "@/components/pagination";
 import { uploadElExcel } from "@/utils/util";
 import { regionData, CodeToText } from "element-china-area-data";
@@ -1712,7 +1711,15 @@ export default {
     },
     /* 前端导出表格 */
     uploadData() {
-      dataPoint({ event_id: "K0101", times: 1 });
+      let obj = {
+            full_burials: [
+              {
+                event_id: "K0101",
+                times: 1,
+              },
+            ],
+          };
+      dataPoint(obj);
       let commons = [];
       /*
     //可配合筛选进行筛选固定列进行导出  
@@ -1901,7 +1908,15 @@ export default {
     searchBtn(type) {
       if (type == 1) {
         try {
-          dataPoint({ event_id: "K0100", times: 1 });
+          let obj = {
+            full_burials: [
+              {
+                event_id: "K0100",
+                times: 1,
+              },
+            ],
+          };
+          dataPoint(obj);
         } catch (error) {
           console.error(error);
         }

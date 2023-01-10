@@ -93,7 +93,6 @@ export default {
               setStorage("username",nickname);
               console.log(is_admin);
               this.$store.commit('user/SET_IDENTITY', is_admin)
-              sessionStorage.setItem('is_admin',is_admin)
               this.$message({ message: res.msg, type: "success" });
               this.$router.replace("/layout");
             } else {

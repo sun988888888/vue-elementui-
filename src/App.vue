@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  created() {
+  /* created() {
     //在页面刷新时将vuex里的state信息保存到sessionStorage里
     window.addEventListener("beforeunload", () => {
       console.log("页面将要刷新了");
@@ -31,7 +31,7 @@ export default {
         this.$store.dispatch("tagsView/addView", item);
       });
     }
-  },
+  }, */
   mounted() {
   },
   watch: {
