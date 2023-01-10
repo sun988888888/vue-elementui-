@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" border style="width: 100%" v-loading="isLoading">
       <el-table-column prop="name" label="姓名" > </el-table-column>
       <el-table-column prop="add_date" label="日期" > </el-table-column>
       <el-table-column prop="d_times" label="导出次数" > </el-table-column>
@@ -40,14 +40,18 @@ export default {
 
   methods: {
     getData() {
-      dataPointList([])
+      let obj = {
+        pageSize: this.pageSize,
+        page: this.currentPage,
+      };
+      this.isLoading=true
+      dataPointList(obj)
         .then((res) => {
           if (res.code == 200) {
             let { data, current_page, total } = res.data;
             this.isLoading = false;
             this.currentPage = current_page;
             this.total = total;
-
             this.tableData = data;
           } else {
             this.isLoading = false;

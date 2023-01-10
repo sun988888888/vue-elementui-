@@ -834,6 +834,10 @@ let accurateCheckData=[
         value: "综合",
         label: "综合",
       },
+      {
+        value: "香水",
+        label: "香水",
+      },
     ]
   },
 
